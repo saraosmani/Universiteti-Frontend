@@ -1,3 +1,45 @@
+# Universiteti Frontend (React)
+
+## Docker Setup (Recommended)
+
+This project uses Docker to run the full stack (backend, frontend, and database).
+
+### Prerequisites
+- Docker and Docker Compose installed
+- Both backend and frontend repositories cloned
+
+### Setup Instructions
+
+1. **Clone both repositories side-by-side:**
+   ```bash
+   mkdir Universiteti
+   cd Universiteti
+   git clone <backend-repo-url> universiteti-backend
+   git clone <frontend-repo-url> universiteti-frontend
+   ```
+
+2. **Start all services:**
+   ```bash
+   cd universiteti-frontend
+   docker-compose up
+   ```
+   
+   This will start:
+   - Laravel backend on `http://localhost:8000`
+   - React frontend on `http://localhost:3000`
+   - MySQL database on port `3307`
+
+3. **Access the application:**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+
+### Important Notes
+- The docker-compose.yml file expects both repos to be in the same parent directory
+- The database data is stored in `mysql_data/` (automatically created)
+- Both repos contain the same docker-compose.yml file for convenience
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
