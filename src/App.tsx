@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useSelector }              from "react-redux";
+import { selectIsAuthenticated }    from "./store/authSlice";
+import Dashboard                    from "./modules/dashboard/Dashboard";
+import OAuthCallback                from "./modules/auth_pages/components/OauthCallback";
+import AuthPage from "./modules/auth_pages/AuthPage";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  return isAuthenticated ? <>{children}</> : <Navigate to="/auth" replace />;
 }
 
-export default App;
+function GuestRoute({ children }: { children: React.ReactNode }) {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/auth/callback" element={<OAuthCallback />} />
+
+      <Route path="/auth" element={
+        <GuestRoute><AuthPage /></GuestRoute>
+      } />
+
+      <Route path="/dashboard" element={
+        <ProtectedRoute><Dashboard /></ProtectedRoute>
+      } />
+
+      <Route path="*" element={<Navigate to="/auth" replace />} />
+    </Routes>
+  );
+}
