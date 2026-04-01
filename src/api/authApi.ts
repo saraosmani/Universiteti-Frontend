@@ -18,12 +18,47 @@ export interface AuthCallbacks {
   onError?:   (error: Error)        => void;
 }
 
-export const loginApi = (payload: LoginPayload): Promise<AuthResponse> =>
-  post<LoginPayload, AuthResponse>("/api/login", payload);
+export const loginApi = async (payload: LoginPayload): Promise<AuthResponse> => {
+  const response = await post<LoginPayload, { success: boolean; message: string; data: { user: User; token: string } }>(
+    "/api/login",
+    payload
+  );
+  return {
+    access_token: response.data.token,
+    token_type: "Bearer",
+    user: response.data.user,
+  };
+};
 
-export const registerApi = (payload: RegisterFormValues): Promise<AuthResponse> =>
-  post<RegisterFormValues, AuthResponse>("/api/register", payload);
+export const registerApi = async (payload: RegisterFormValues): Promise<AuthResponse> => {
+  const response = await post<RegisterFormValues, { success: boolean; message: string; data: { user: User; token: string } }>(
+    "/api/register",
+    payload
+  );
+  return {
+    access_token: response.data.token,
+    token_type: "Bearer",
+    user: response.data.user,
+  };
+};
 
+export const logoutApi = async (token: string): Promise<void> => {
+  const { postAuthenticated } = await import("./api");
+  await postAuthenticated<{}, { success: boolean; message: string }>(
+    "/api/logout",
+    {},
+    token
+  );
+};
+
+export const getCurrentUserApi = async (token: string): Promise<{ user: User }> => {
+  const { getAuthenticated } = await import("./api");
+  const response = await getAuthenticated<{ success: boolean; message: string; data: { user: User } }>(
+    "/api/user",
+    token
+  );
+  return response.data;
+};
 
 export const redirectToGoogle = (): void => {
   window.location.href = `${BASE_URL}/api/auth/google`;

@@ -1,12 +1,10 @@
-import type { CSSProperties }  from "react";
-import { useAppSelector }      from "../../store/hooks";
-import { selectUser }          from "../../store/authSlice";
 import { useLogout } from "../../hooks/auth/useLogout";
+import { useCurrentUser } from "../../hooks/auth/useCurrentUser";
 import { ACCENT, BORDER, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/styles";
 import { signOutBtnBase } from "./styles";
 
 export default function Dashboard() {
-  const user   = useAppSelector(selectUser);
+  const { data: user } = useCurrentUser();
   const logout = useLogout();
 
   return (

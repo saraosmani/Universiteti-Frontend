@@ -19,3 +19,45 @@ export const post = async <TBody, TResponse>(
   }
   return data as TResponse;
 };
+
+export const postAuthenticated = async <TBody, TResponse>(
+  endpoint: string,
+  body: TBody,
+  token: string
+): Promise<TResponse> => {
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    method:  "POST",
+    headers: { 
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body:    JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    const errorMessage = data.message || "Request failed";
+    throw new Error(errorMessage);
+  }
+  return data as TResponse;
+};
+
+export const getAuthenticated = async <TResponse>(
+  endpoint: string,
+  token: string
+): Promise<TResponse> => {
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    method:  "GET",
+    headers: { 
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    const errorMessage = data.message || "Request failed";
+    throw new Error(errorMessage);
+  }
+  return data as TResponse;
+};
