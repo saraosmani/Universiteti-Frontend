@@ -203,7 +203,7 @@ export default function AuthPage() {
                 ? <LoginForm   onSuccess={handleSuccess} onError={handleError} />
                 : <RegisterForm onSuccess={handleSuccess} onError={handleError} />
               }
-              <GoogleButton onSuccess={handleSuccess} onError={handleError} />
+              <GoogleButton onSuccess={handleSuccess} onError={handleError} mode={mode}/>
             </ConfigProvider>
 
             <p style={{

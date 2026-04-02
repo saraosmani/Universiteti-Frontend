@@ -6,6 +6,7 @@ import type { CSSProperties } from "react";
 interface GoogleButtonProps {
   onSuccess?: (data: AuthResponse) => void;
   onError?:   (error: Error)        => void;
+  mode?:      "login" | "register";
 }
 
 const googleBtnStyle: CSSProperties = {
@@ -19,12 +20,11 @@ const googleBtnHoverStyle = `
   }
 `;
 
-export default function GoogleButton({ onSuccess, onError }: GoogleButtonProps) {
-
+export default function GoogleButton({ onSuccess, onError, mode = "login" }: GoogleButtonProps) {
   return (
     <>
       <style>{googleBtnHoverStyle}</style>
-      
+
       <Divider style={{ borderColor: "rgba(196,164,100,0.15)", color: "rgba(240,232,208,0.3)", fontSize: 11 }}>
         OSE VAZHDO ME
       </Divider>
@@ -37,7 +37,7 @@ export default function GoogleButton({ onSuccess, onError }: GoogleButtonProps) 
         className="google-auth-btn"
         style={googleBtnStyle}
       >
-        Sign in with Google
+        {mode === "register" ? "Sign up with Google" : "Sign in with Google"}
       </Button>
     </>
   );
