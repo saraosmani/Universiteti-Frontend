@@ -6,17 +6,17 @@ import { AuthResponse } from "../../api/authApi";
 import LoginForm from "./login/Login";
 import RegisterForm from "./Register/Register";
 import GoogleButton from "./components/GoogleButton";
-import { antdTheme, globalCss } from "./styles";
+import { antdTheme, globalCss } from "./AuthPage.styles";
 import { AuthMode} from "./definitions";
 import CornerOrnament from "./components/CornerOrnament";
-import { ACCENT, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/styles";
+import { ACCENT, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/colors";
 
 const tabs: { mode: AuthMode; label: string }[] = [
   { mode: "login",    label: "HYRJE"    },
   { mode: "register", label: "REGJISTRIM" },
 ];
 
-export default function AuthPage() {
+const AuthPage = () => {
   const [mode, setMode]         = useState<AuthMode>("login");
   const [msgApi, contextHolder] = message.useMessage();
 
@@ -225,3 +225,5 @@ export default function AuthPage() {
     </>
   );
 }
+
+export default AuthPage;

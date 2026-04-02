@@ -3,7 +3,7 @@ import {
   UserOutlined, MailOutlined, LockOutlined,
 } from "@ant-design/icons";
 import { useState }                         from "react";
-import { inputStyle, primaryBtnStyle }      from "../../../styles/styles";
+import { inputStyle, primaryBtnStyle }      from "../../../styles/common";
 import type { AuthResponse }                from "../../../api/authApi";
 import { COUNTRIES }                        from "../utils/countries";
 import { RegisterFormValues }               from "../definitions";
@@ -15,7 +15,7 @@ interface RegisterFormProps {
   onError?:   (error: Error)        => void;
 }
 
-export default function RegisterForm({ onSuccess, onError }: RegisterFormProps) {
+const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
   const [form]     = Form.useForm<RegisterFormValues>();
   const [dialCode, setDialCode] = useState("355"); 
   const { mutate: register, isPending } = useRegister({ onSuccess, onError });
@@ -226,3 +226,5 @@ export default function RegisterForm({ onSuccess, onError }: RegisterFormProps) 
     </Form>
   );
 }
+
+export default RegisterForm;

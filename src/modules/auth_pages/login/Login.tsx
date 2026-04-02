@@ -1,6 +1,6 @@
 import { Form, Input, Button } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-import { inputStyle, primaryBtnStyle } from  "../../../styles/styles";
+import { inputStyle, primaryBtnStyle } from  "../../../styles/common";
 import type { AuthResponse }   from "../../../api/authApi";
 import { useLogin } from "../../../hooks/auth/useLogin";
 import { LoginFormValues } from "../definitions";
@@ -10,7 +10,7 @@ interface LoginFormProps {
   onError?:   (error: Error)        => void;
 }
 
-export default function LoginForm({ onSuccess, onError }: LoginFormProps) {
+const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
   const [form] = Form.useForm<LoginFormValues>();
   const { mutate: login, isPending } = useLogin({ onSuccess, onError });
 
@@ -68,3 +68,5 @@ export default function LoginForm({ onSuccess, onError }: LoginFormProps) {
     </Form>
   );
 }
+
+export default LoginForm;

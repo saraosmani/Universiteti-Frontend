@@ -19,8 +19,7 @@ const googleBtnHoverStyle = `
     border-color: rgba(196,164,100,0.5) !important;
   }
 `;
-
-export default function GoogleButton({ onSuccess, onError, mode = "login" }: GoogleButtonProps) {
+const GoogleButton = ({ onSuccess, onError, mode = "login" }: GoogleButtonProps) => {
   return (
     <>
       <style>{googleBtnHoverStyle}</style>
@@ -42,3 +41,5 @@ export default function GoogleButton({ onSuccess, onError, mode = "login" }: Goo
     </>
   );
 }
+
+export default GoogleButton;

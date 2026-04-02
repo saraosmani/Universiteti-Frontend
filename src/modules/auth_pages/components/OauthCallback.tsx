@@ -4,7 +4,7 @@ import { useAppDispatch }    from "../../../store/hooks";
 import { setUser }           from "../../../store/authSlice";
 import type { User }         from "../../../store/authSlice";
 
-export default function OAuthCallback() {
+const OAuthCallback = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -43,3 +43,5 @@ export default function OAuthCallback() {
     </div>
   );
 }
+
+export default OAuthCallback;

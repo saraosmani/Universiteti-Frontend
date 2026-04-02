@@ -1,9 +1,9 @@
 import { useLogout } from "../../hooks/auth/useLogout";
-import { useCurrentUser } from "../../hooks/auth/useCurrentUser";
-import { ACCENT, BORDER, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/styles";
-import { signOutBtnBase } from "./styles";
+import { useCurrentUser } from "../../hooks/auth/useGetCurrentUser";
+import { ACCENT, BORDER, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/colors";
+import { signOutBtnBase } from "./Dashboard.styles";
 
-export default function Dashboard() {
+const Dashboard = () => {
   const { data: user } = useCurrentUser();
   const logout = useLogout();
 
@@ -117,3 +117,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default Dashboard;
