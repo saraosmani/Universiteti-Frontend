@@ -4,12 +4,11 @@ import { useCurrentUser } from "../../hooks/auth/useGetCurrentUser";
 import { ACCENT, BORDER, LIGHT, MUTED, NAVY, WHITE } from "../../styles/colors";
 
 const Dashboard = () => {
-  const { data: userData } = useCurrentUser(); // E emërojmë userData këtu
+  const { data: userData } = useCurrentUser(); 
   const user = userData as any;
   const logout = useLogout();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  // Ngjyra e Sidebar-it nga Figma duket më e errët se Navy
   const SIDEBAR_DARK = "#0B1120"; 
 
   const menuSections = [
@@ -21,7 +20,6 @@ const Dashboard = () => {
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#F8FAFC", fontFamily: "'Inter', sans-serif" }}>
       
-      {/* SIDEBAR (Pjesa jeshile majtas në foto) */}
       <div style={{
         width: "240px",
         background: SIDEBAR_DARK,
@@ -58,16 +56,13 @@ const Dashboard = () => {
           </div>
         ))}
         
-        {/* Logout Button në fund të Sidebar */}
         <div onClick={logout} style={{ marginTop: "auto", padding: "20px 24px", cursor: "pointer", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
           Logout
         </div>
       </div>
 
-      {/* MAIN CONTENT AREA */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         
-        {/* NAVBAR (Pjesa jeshile lart në foto) */}
         <div style={{
           height: "64px",
           background: WHITE,
@@ -106,7 +101,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* DROPDOWN MENU */}
           {isProfileOpen && (
             <div style={{
               position: "absolute",
@@ -134,11 +128,9 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* DASHBOARD BODY */}
         <div style={{ padding: "32px", flex: 1 }}>
           <h2 style={{ fontSize: "22px", fontWeight: "700", color: NAVY }}>Mirëserdhe, {user?.name}! 👋</h2>
           <div style={{ marginTop: "24px", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
-             {/* Karta ilustruese si në Figma */}
              {[1,2,3].map(i => (
                <div key={i} style={{ background: WHITE, height: "150px", borderRadius: "16px", border: `1px solid ${BORDER}` }}></div>
              ))}
