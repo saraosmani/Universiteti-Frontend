@@ -70,3 +70,27 @@ export const getAuthenticated = async <TResponse>(
     throw new Error(errorMessage);
   }
 };
+
+export const putAuthenticated = async <TBody, TResponse>(
+  endpoint: string,
+  body: TBody,
+  token: string,
+): Promise<TResponse> => {
+  try {
+    const response = await axios.put<TResponse>(
+      `${BASE_URL}${endpoint}`,
+      body,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || "Request failed";
+    throw new Error(errorMessage);
+  }
+};

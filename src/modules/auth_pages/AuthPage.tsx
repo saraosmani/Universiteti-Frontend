@@ -3,13 +3,13 @@ import { ConfigProvider, message } from "antd";
 import { BookOutlined }            from "@ant-design/icons";
 
 import { AuthResponse } from "../../api/authApi";
+import LoginForm from "./Login/Login";
 import RegisterForm from "./Register/Register";
 import GoogleButton from "./components/GoogleButton";
 import { antdTheme, globalCss } from "./AuthPage.styles";
 import { AuthMode} from "./definitions";
 import CornerOrnament from "./components/CornerOrnament";
 import { ACCENT, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/colors";
-import LoginForm from "./Login/Login";
 
 const tabs: { mode: AuthMode; label: string }[] = [
   { mode: "login",    label: "HYRJE"    },
