@@ -1,63 +1,96 @@
-export const BASE_URL = process.env.REACT_APP_API_URL ?? "http://localhost:8085";
+import axios from "axios";
+
+export const BASE_URL =
+  process.env.REACT_APP_API_URL ?? "http://localhost:8085";
 
 export const post = async <TBody, TResponse>(
   endpoint: string,
-  body: TBody
+  body: TBody,
 ): Promise<TResponse> => {
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
-    method:  "POST",
-    headers: { 
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    },
-    body:    JSON.stringify(body),
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    const errorMessage = data.message || data.errors?.email?.[0] || "Request failed";
+  try {
+    const response = await axios.post<TResponse>(
+      `${BASE_URL}${endpoint}`,
+      body,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.errors?.email?.[0] ||
+      "Request failed";
     throw new Error(errorMessage);
   }
-  return data as TResponse;
 };
 
 export const postAuthenticated = async <TBody, TResponse>(
   endpoint: string,
   body: TBody,
-  token: string
+  token: string,
 ): Promise<TResponse> => {
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
-    method:  "POST",
-    headers: { 
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-    body:    JSON.stringify(body),
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    const errorMessage = data.message || "Request failed";
+  try {
+    const response = await axios.post<TResponse>(
+      `${BASE_URL}${endpoint}`,
+      body,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || "Request failed";
     throw new Error(errorMessage);
   }
-  return data as TResponse;
 };
 
 export const getAuthenticated = async <TResponse>(
   endpoint: string,
-  token: string
+  token: string,
 ): Promise<TResponse> => {
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
-    method:  "GET",
-    headers: { 
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    const errorMessage = data.message || "Request failed";
+  try {
+    const response = await axios.get<TResponse>(`${BASE_URL}${endpoint}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || "Request failed";
     throw new Error(errorMessage);
   }
-  return data as TResponse;
+};
+
+export const putAuthenticated = async <TBody, TResponse>(
+  endpoint: string,
+  body: TBody,
+  token: string,
+): Promise<TResponse> => {
+  try {
+    const response = await axios.put<TResponse>(
+      `${BASE_URL}${endpoint}`,
+      body,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || "Request failed";
+    throw new Error(errorMessage);
+  }
 };

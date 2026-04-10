@@ -13,6 +13,7 @@ import PrezencaPage from "./modules/Prezenca/PrezencaPage";
 import FinancaPage from "./modules/Financa/FinancaPage";
 import NjoftimePage from "./modules/Njoftime/NjoftimePage";
 import CileSimePage from "./modules/Cilesimet/CileSimePage";
+import CompleteProfileForm from "./modules/auth_pages/components/CompleteProfile";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -28,6 +29,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/auth/callback" element={<OAuthCallback />} />
+      <Route path="/auth/complete-profile" element={<CompleteProfileForm />} />
 
       <Route path="/auth" element={
         <GuestRoute><AuthPage /></GuestRoute>
