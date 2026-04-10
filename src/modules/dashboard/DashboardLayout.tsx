@@ -1,175 +1,300 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLogout } from "../../hooks/auth/useLogout";
 import { useCurrentUser } from "../../hooks/auth/useGetCurrentUser";
 import { BORDER, MUTED, NAVY, WHITE } from "../../styles/colors";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
-  DashboardOutlined,
-  CalendarOutlined,
-  FileTextOutlined,
-  BookOutlined,
-  BarChartOutlined,
-  ReadOutlined,
-  CheckSquareOutlined,
-  DollarOutlined,
-  NotificationOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-} from '@ant-design/icons';
+Layout as AntLayout,
+Menu,
+Avatar,
+Dropdown,
+} from "antd";
+import type { MenuProps } from "antd";
+import {
+DashboardOutlined,
+CalendarOutlined,
+FileTextOutlined,
+BookOutlined,
+BarChartOutlined,
+ReadOutlined,
+CheckSquareOutlined,
+DollarOutlined,
+NotificationOutlined,
+SettingOutlined,
+LogoutOutlined,
+SearchOutlined,
+} from "@ant-design/icons";
 
+const { Sider, Header, Content } = AntLayout;
 const SIDEBAR_DARK = "#0B1120";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { data: userData } = useCurrentUser();
-  const user = userData as any;
-  const logout = useLogout();
-  const navigate = useNavigate();
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+const { data: userData } = useCurrentUser();
+const user = userData as any;
+const logout = useLogout();
+const navigate = useNavigate();
+const location = useLocation();
 
-  const menuSections = [
-    { title: "AKADEMIKE", items: [
-      { label: "Orari", icon: <CalendarOutlined />, path: "/orari" },
-      { label: "Provime", icon: <FileTextOutlined />, path: "/provime" },
-      { label: "Detyrat", icon: <BookOutlined />, path: "/detyrat" },
-      { label: "Raporti i Notave", icon: <BarChartOutlined />, path: "/nota" },
-      { label: "Lëndët e Regjistruara", icon: <ReadOutlined />, path: "/lendet" },
-      { label: "Prezenca", icon: <CheckSquareOutlined />, path: "/prezenca" },
-    ]},
-    { title: "ADMINISTRATIVE", items: [
-      { label: "Financat", icon: <DollarOutlined />, path: "/financa" },
-      { label: "Njoftimet", icon: <NotificationOutlined />, path: "/njoftime" },
-    ]},
-    { title: "CILËSIMET", items: [
-      { label: "Cilësimet e Llogarisë", icon: <SettingOutlined />, path: "/cilesimet" },
-    ]},
-  ];
+const selectedKey = location.pathname;
 
-  return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#F8FAFC", fontFamily: "'Inter', sans-serif" }}>
+const menuItems: MenuProps["items"] = [
+{
+key: "/dashboard",
+icon: <DashboardOutlined />,
+label: "Paneli Kryesor",
+onClick: () => navigate("/dashboard"),
+style: { marginBottom: 8 },
+},
+{
+type: "group",
+label: "AKADEMIKE",
+children: [
+{
+key: "/orari",
+icon: <CalendarOutlined />,
+label: "Orari",
+onClick: () => navigate("/orari"),
+},
+{
+key: "/provime",
+icon: <FileTextOutlined />,
+label: "Provime",
+onClick: () => navigate("/provime"),
+},
+{
+key: "/detyrat",
+icon: <BookOutlined />,
+label: "Detyrat",
+onClick: () => navigate("/detyrat"),
+},
+{
+key: "/nota",
+icon: <BarChartOutlined />,
+label: "Raporti i Notave",
+onClick: () => navigate("/nota"),
+},
+{
+key: "/lendet",
+icon: <ReadOutlined />,
+label: "Lëndët e Regjistruara",
+onClick: () => navigate("/lendet"),
+},
+{
+key: "/prezenca",
+icon: <CheckSquareOutlined />,
+label: "Prezenca",
+onClick: () => navigate("/prezenca"),
+},
+],
+},
+{
+type: "group",
+label: "ADMINISTRATIVE",
+children: [
+{
+key: "/financa",
+icon: <DollarOutlined />,
+label: "Financat",
+onClick: () => navigate("/financa"),
+},
+{
+key: "/njoftime",
+icon: <NotificationOutlined />,
+label: "Njoftimet",
+onClick: () => navigate("/njoftime"),
+},
+],
+},
+{
+type: "group",
+label: "CILËSIMET",
+children: [
+{
+key: "/cilesimet",
+icon: <SettingOutlined />,
+label: "Cilësimet e Llogarisë",
+onClick: () => navigate("/cilesimet"),
+},
+],
+},
+];
 
-      <div style={{
-        width: "240px",
-        background: SIDEBAR_DARK,
-        color: "#94A3B8",
-        display: "flex",
-        flexDirection: "column",
-        padding: "20px 0"
-      }}>
-        <div style={{ padding: "0 24px 30px", color: WHITE, fontWeight: "bold", fontSize: "18px" }}>
-          Aleksander Moisiu
-        </div>
+const profileDropdownItems: MenuProps["items"] = [
+{
+key: "info",
+label: (
+<div style={{ padding: "4px 0" }}>
+<div style={{ fontWeight: 600, color: NAVY }}>
+{user?.name} {user?.surname || ""}
+</div>
+<div style={{ fontSize: 12, color: MUTED }}>{user?.email}</div>
+</div>
+),
+disabled: true,
+},
+{ type: "divider" },
+{
+key: "logout",
+icon: <LogoutOutlined style={{ color: "#EF4444" }} />,
+label: <span style={{ color: "#EF4444", fontWeight: 600 }}>Dil</span>,
+onClick: logout,
+},
+];
 
-        <div onClick={() => navigate("/dashboard")} style={{
-          background: "rgba(255,255,255,0.1)",
-          color: WHITE,
-          margin: "0 12px 20px",
-          padding: "10px 12px",
-          borderRadius: "8px",
-          fontSize: "14px",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          cursor: "pointer"
-        }}>
-          <DashboardOutlined />
-          Paneli Kryesor
-        </div>
+return (
+<AntLayout style={{ minHeight: "100vh", fontFamily: "'Inter', sans-serif" }}>
+{/* ── Sidebar ── */}
+<Sider
+width={240}
+style={{
+background: SIDEBAR_DARK,
+position: "sticky",
+top: 0,
+height: "100vh",
+overflow: "auto",
+display: "flex",
+flexDirection: "column",
+}}
+>
+{/* Logo / University name */}
+<div
+style={{
+padding: "20px 24px 28px",
+color: WHITE,
+fontWeight: 700,
+fontSize: 17,
+letterSpacing: "-0.2px",
+lineHeight: 1.3,
+}}
+>
+Aleksander Moisiu
+</div>
 
-        {menuSections.map((section, idx) => (
-          <div key={idx} style={{ marginBottom: "20px" }}>
-            <div style={{ padding: "0 24px 8px", fontSize: "11px", fontWeight: "600", color: "#475569" }}>
-              {section.title}
-            </div>
-            {section.items.map((item, i) => (
-              <div key={i} onClick={() => navigate(item.path)} style={{
-                padding: "8px 24px",
-                fontSize: "13px",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px"
-              }}>
-                {item.icon}
-                {item.label}
-              </div>
-            ))}
-          </div>
-        ))}
+{/* Navigation menu */}
+<Menu
+mode="inline"
+selectedKeys={[selectedKey]}
+items={menuItems}
+style={{
+background: "transparent",
+border: "none",
+flex: 1,
+}}
+theme="dark"
+/>
 
-        <div onClick={logout} style={{
-          marginTop: "auto",
-          padding: "20px 24px",
-          cursor: "pointer",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px"
-        }}>
-          <LogoutOutlined />
-          Dil
-        </div>
-      </div>
+{/* Logout at bottom */}
+<div
+onClick={logout}
+style={{
+padding: "16px 24px",
+borderTop: "1px solid rgba(255,255,255,0.06)",
+color: "#94A3B8",
+fontSize: 13,
+cursor: "pointer",
+display: "flex",
+alignItems: "center",
+gap: 10,
+transition: "color 0.2s",
+}}
+onMouseEnter={(e) =>
+(e.currentTarget.style.color = WHITE)
+}
+onMouseLeave={(e) =>
+(e.currentTarget.style.color = "#94A3B8")
+}
+>
+<LogoutOutlined />
+Dil
+</div>
+</Sider>
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+{/* ── Main area ── */}
+<AntLayout>
+{/* Header */}
+<Header
+style={{
+background: WHITE,
+padding: "0 32px",
+height: 64,
+lineHeight: "64px",
+borderBottom: `1px solid ${BORDER}`,
+display: "flex",
+alignItems: "center",
+justifyContent: "space-between",
+position: "sticky",
+top: 0,
+zIndex: 10,
+}}
+>
+{/* Search hint */}
+<div
+style={{
+display: "flex",
+alignItems: "center",
+gap: 8,
+color: MUTED,
+fontSize: 14,
+cursor: "text",
+}}
+>
+<SearchOutlined />
+Kërko...
+</div>
 
-        <div style={{
-          height: "64px",
-          background: WHITE,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 32px",
-          borderBottom: `1px solid ${BORDER}`,
-          position: "relative"
-        }}>
-          <div style={{ color: MUTED, fontSize: "14px" }}>Kërko...</div>
+{/* Profile dropdown */}
+<Dropdown
+menu={{ items: profileDropdownItems }}
+trigger={["click"]}
+placement="bottomRight"
+overlayStyle={{ minWidth: 220 }}
+>
+<div
+style={{
+display: "flex",
+flexDirection: "row",
+alignItems: "center",
+gap: 12,
+cursor: "pointer",
+lineHeight: 1,
+}}
+>
+<div style={{ textAlign: "right", display: "flex", flexDirection: "column", gap: 2 }}>
+<span style={{ fontSize: 14, fontWeight: 600, color: NAVY, whiteSpace: "nowrap" }}>
+{user?.name} {user?.surname || ""}
+</span>
+<span style={{ fontSize: 12, color: MUTED, whiteSpace: "nowrap" }}>
+ID: 2026-UAMD
+</span>
+</div>
+<Avatar
+style={{
+background: "#E2E8F0",
+color: NAVY,
+fontWeight: 700,
+flexShrink: 0,
+}}
+size={36}
+>
+{user?.name?.[0]?.toUpperCase() || "A"}
+</Avatar>
+</div>
+</Dropdown>
+</Header>
 
-          <div onClick={() => setIsProfileOpen(!isProfileOpen)}
-            style={{ display: "flex", alignItems: "center", cursor: "pointer", gap: "12px" }}>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: "14px", fontWeight: "600", color: NAVY }}>
-                {user?.name} {user?.surname || ""}
-              </div>
-              <div style={{ fontSize: "12px", color: MUTED }}>ID: 2026-UAMD</div>
-            </div>
-            <div style={{
-              width: "36px", height: "36px", borderRadius: "50%",
-              background: "#E2E8F0", display: "flex", alignItems: "center",
-              justifyContent: "center", fontWeight: "bold", color: NAVY
-            }}>
-              {user?.name?.[0]?.toUpperCase() || "A"}
-            </div>
-          </div>
-
-          {isProfileOpen && (
-            <div style={{
-              position: "absolute", top: "60px", right: "32px",
-              background: WHITE, border: `1px solid ${BORDER}`,
-              borderRadius: "12px", width: "240px",
-              boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)",
-              zIndex: 100, padding: "16px"
-            }}>
-              <div style={{ marginBottom: "12px", paddingBottom: "12px", borderBottom: `1px solid ${BORDER}` }}>
-                <p style={{ margin: 0, fontWeight: "bold", color: NAVY }}>{user?.name} {user?.surname || ""}</p>
-                <p style={{ margin: 0, fontSize: "12px", color: MUTED }}>{user?.email}</p>
-              </div>
-              <button onClick={logout} style={{
-                width: "100%", padding: "8px", borderRadius: "6px",
-                border: "none", background: "#F1F5F9", color: "#EF4444",
-                fontWeight: "600", cursor: "pointer"
-              }}>
-                Dalo
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div style={{ padding: "32px", flex: 1 }}>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
+{/* Page content */}
+<Content
+style={{
+padding: 32,
+background: "#F8FAFC",
+minHeight: "calc(100vh - 64px)",
+}}
+>
+{children}
+</Content>
+</AntLayout>
+</AntLayout>
+);
 };
 
 export default Layout;
