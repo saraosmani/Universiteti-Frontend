@@ -8,25 +8,38 @@ const OAuthCallback = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const error  = params.get("error");
-    const token  = params.get("token");
-    const raw    = params.get("user");
+ useEffect(() => {
+    const params    = new URLSearchParams(window.location.search);
+    const error     = params.get("error");
+    const token     = params.get("token");
+    const raw       = params.get("user");
+    const isNew     = params.get("is_new") === "1";
+    const tempToken = params.get("temp_token");
 
-    if (error || !token || !raw) {
+
+    if (error) {
       navigate("/auth?error=oauth_failed", { replace: true });
       return;
     }
 
-    try {
-      const user: User = JSON.parse(raw);
-      dispatch(setUser({ user, token }));
-      navigate("/dashboard", { replace: true });
-    } catch {
-      navigate("/auth?error=oauth_failed", { replace: true });
+    if (isNew && tempToken) {
+      sessionStorage.setItem("oauth_temp_token", tempToken);
+      navigate("/auth/complete-profile", { replace: true });
+      return;
     }
-  }, [dispatch, navigate]);
+
+    if (token && raw) {
+      try {
+        const user: User = JSON.parse(raw);
+        dispatch(setUser({ user, token }));
+        navigate("/dashboard", { replace: true });
+      } catch {
+        navigate("/auth?error=oauth_failed", { replace: true });
+      }
+      return;
+    }
+
+}, [dispatch, navigate]);
 
   return (
     <div style={{
