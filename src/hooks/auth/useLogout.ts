@@ -9,7 +9,10 @@ export const useLogout = (): (() => void) => {
   const token = useAppSelector(selectToken);
 
   const { mutate } = useMutation({
-    mutationFn: () => logoutApi(token!),
+    mutationFn: () => {
+      if (!token) throw new Error('Token nuk u gjet!')
+      return logoutApi(token)
+    },
     onSettled: () => {
       dispatch(logout());
     },

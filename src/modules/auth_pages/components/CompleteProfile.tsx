@@ -1,7 +1,7 @@
-import { Form, Input, Select, Button, Typography, Steps } from 'antd'
+import { Form, Input, Select, Button, Typography, Steps, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../../store/hooks'
-import { setUser } from '../../../store/authSlice'
+import { setUser, User } from '../../../store/authSlice'
 import { COUNTRIES } from '../utils/countries'
 import { DIGITS_RE } from '../utils/validation'
 import { primaryBtnStyle } from '../../../styles/common'
@@ -11,8 +11,22 @@ import { GlobalOutlined, PhoneOutlined, UserSwitchOutlined } from '@ant-design/i
 
 const { Title, Text } = Typography
 
+interface ProfileFormBody {
+  temp_token: string | null
+  phone_number: string
+  country: string
+  role: string
+}
+
+interface AuthResponse {
+  data: {
+    user: User
+    token: string
+  }
+}
+
 const CompleteProfileForm = () => {
-  const [form] = Form.useForm()
+  const [form] = Form.useForm<ProfileFormBody>()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [dialCode, setDialCode] = useState('355')
@@ -23,12 +37,12 @@ const CompleteProfileForm = () => {
     if (found?.dialCode) setDialCode(found.dialCode)
   }
 
-  const handleFinish = async ({ phone_number, country, role }: any) => {
+  const handleFinish = async ({ phone_number, country, role }: ProfileFormBody) => {
     const fullPhone = `+${dialCode}${phone_number.replace(/\s/g, '')}`
     const tempToken = sessionStorage.getItem('oauth_temp_token')
     setLoading(true)
     try {
-      const data: any = await post(
+      const data = await post<ProfileFormBody, AuthResponse>(
         '/api/auth/complete_profile',
         { temp_token: tempToken, phone_number: fullPhone, country, role }
       )
@@ -36,7 +50,8 @@ const CompleteProfileForm = () => {
       dispatch(setUser({ user: data.data.user, token: data.data.token }))
       navigate('/dashboard', { replace: true })
     } catch (e) {
-      console.error(e)
+      const error = e as { response?: { data?: { message?: string } } }
+      message.error(error?.response?.data?.message || 'Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
