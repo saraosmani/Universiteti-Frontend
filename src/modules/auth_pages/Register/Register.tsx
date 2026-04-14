@@ -176,7 +176,7 @@ const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
       {/* Password */}
       <Form.Item
         name="password"
-        rules={[{ required: true, min: 6, message: "Minimumi 6 karaktere" }]}
+        rules={[{ required: true, min: 8, message: "Minimumi 8 karaktere" }]}
         style={{ marginBottom: 20 }}
       >
         <Input.Password
