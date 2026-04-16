@@ -20,3 +20,9 @@ export const GENDERS = [
   { value: "M", label: "Mashkull" },
   { value: "F", label: "Femër" },
 ];
+
+export interface StepTwoStudentValues {
+  stu_atesi: string;
+  stu_gjini: "M" | "F";
+  stu_dl: string;
+}

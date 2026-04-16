@@ -10,7 +10,7 @@ const getProfileStatusApi = async (token: string): Promise<{
   is_complete: boolean;
 }> => {
   const response = await axios.get<{ success: boolean; is_complete: boolean }>(
-    `${BASE_URL}/api/pedagogues/profile_status`,
+    `${BASE_URL}/api/profile_status`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -29,6 +29,6 @@ export const useProfileStatus = (enabled: boolean = true) => {
     queryKey: ["profileStatus"],
     queryFn: () => getProfileStatusApi(token!),
     enabled: enabled && !!token,
-    staleTime: 0, // always re-check after login
+    staleTime: 0, 
   });
 };

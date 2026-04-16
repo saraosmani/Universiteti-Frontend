@@ -1,7 +1,7 @@
 import { Button, Form, Select, Spin } from "antd";
 import { useGetDepartaments } from "../../../hooks/departament/useGetDepartaments";
 import { StepOneValues } from "../definitions";
-import { inputStyle, NAVY, primaryBtnStyle } from "../../../styles/common";
+import { NAVY, primaryBtnStyle } from "../../../styles/common";
 
 const StepDepartament = ({
   onNext,

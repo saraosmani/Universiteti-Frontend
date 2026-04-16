@@ -2,17 +2,28 @@ import React from "react";
 import Layout from "./DashboardLayout";
 import { useAppSelector } from "../../store/hooks";
 import { useProfileStatus } from "../../hooks/complete_profile/useGetProfileStatus";
-import CompleteProfileStepper from "../complete_profile/CompleteProfileStepper";
 import { useQueryClient } from "@tanstack/react-query";
 import { BORDER, NAVY, WHITE } from "../../styles/common";
+import CompletePedagogProfileStepper from "../complete_profile/CompletePedagogProfileStepper";
+import CompleteStudentProfileStepper from "../complete_profile/CompleteStudentProfileStepper";
 
 const Dashboard = () => {
   const queryClient = useQueryClient();
   const { user } = useAppSelector((state) => state.auth);
   const isPedag = user?.role === "pedagog";
+  const isStudent = user?.role === "student";
 
-  const { data: statusData, refetch } = useProfileStatus(isPedag);
-  const needsCompletion = isPedag && statusData?.is_complete === false;
+  const { data: statusData, refetch, isLoading } = useProfileStatus(isPedag || isStudent);
+  const needsCompletion = (isPedag || isStudent) && statusData?.is_complete === false;
+
+  console.log("Dashboard Debug:", {
+    role: user?.role,
+    isPedag,
+    isStudent,
+    statusData,
+    isLoading,
+    needsCompletion
+  });
 
   const handleProfileComplete = () => {
     queryClient.invalidateQueries({ queryKey: ["currentUser"] });
@@ -24,9 +35,12 @@ const Dashboard = () => {
       <h2 style={{ fontSize: "22px", fontWeight: "700", color: NAVY }}>
         Mirëserdhe! 👋
       </h2>
-       {needsCompletion && (
-         <CompleteProfileStepper onComplete={handleProfileComplete} />
-       )}
+      {needsCompletion &&
+        (user?.role === "pedagog" ? (
+          <CompletePedagogProfileStepper onComplete={handleProfileComplete} />
+        ) : user?.role === "student" ? (
+          <CompleteStudentProfileStepper onComplete={handleProfileComplete} />
+        ) : null)}
       <div
         style={{
           marginTop: "24px",

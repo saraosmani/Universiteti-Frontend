@@ -25,7 +25,7 @@ interface CompleteProfileResponse {
   };
 }
 
-const completeProfileApi = async (
+const completePedagogProfileApi = async (
   payload: CompleteProfilePayload,
   token: string
 ): Promise<CompleteProfileResponse> => {
@@ -43,7 +43,7 @@ const completeProfileApi = async (
   return response.data;
 };
  
-export const useCompleteProfile = ({
+export const useCompletePedagogProfile = ({
   onSuccess,
   onError,
 }: UseCompleteProfileOptions = {}) => {
@@ -52,7 +52,7 @@ export const useCompleteProfile = ({
  
   return useMutation({
     mutationFn: (payload: CompleteProfilePayload) =>
-      completeProfileApi(payload, token!),
+      completePedagogProfileApi(payload, token!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
       queryClient.invalidateQueries({ queryKey: ["profileStatus"] });

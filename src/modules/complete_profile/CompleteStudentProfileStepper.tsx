@@ -1,42 +1,32 @@
 import { useState } from "react";
-import { useCompleteProfile } from "../../hooks/complete_profile/useCompleteProfile";
-import { StepOneValues, StepTwoValues } from "./definitions";
-import StepDepartament from "./components/StepOneDepartament";
-import StepPersonalDetails from "./components/StepTwoPersonalDetails";
+import { StepTwoStudentValues } from "./definitions";
 import StepSuccess from "./components/StepSuccess";
-import StepIndicator from "./components/StepIndicator";
 import { NAVY, WHITE } from "../../styles/common";
+import { useCompleteStudentProfile } from "../../hooks/complete_profile/useCompleteStudentProfile";
+import StepOneStudentDetails from "./components/StepOneStudentDetails";
 
 interface CompleteProfileStepperProps {
   onComplete: () => void;
 }
 
-const CompleteProfileStepper = ({
+const CompleteStudentProfileStepper = ({
   onComplete,
 }: CompleteProfileStepperProps) => {
   const [step, setStep] = useState(0);
-  const [stepOneData, setStepOneData] = useState<StepOneValues | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const { mutate: completeProfile, isPending } = useCompleteProfile({
+  const { mutate: completeProfile, isPending } = useCompleteStudentProfile({
     onSuccess: () => {
       setShowSuccess(true);
       setTimeout(() => onComplete(), 2000);
     },
   });
 
-  const handleStepOne = (values: StepOneValues) => {
-    setStepOneData(values);
-    setStep(1);
-  };
-
-  const handleStepTwo = (values: StepTwoValues) => {
-    if (!stepOneData) return;
+  const handleFinish = (values: StepTwoStudentValues) => {
     completeProfile({
-      dep_id: stepOneData.dep_id,
-      ped_tit: values.ped_tit,
-      ped_gjin: values.ped_gjin,
-      ped_dl: values.ped_dl.toString(),
+      stu_atesi: values.stu_atesi,
+      stu_gjini: values.stu_gjini,
+      stu_dl: values?.stu_dl?.toString(),
     });
   };
 
@@ -98,26 +88,17 @@ const CompleteProfileStepper = ({
               lineHeight: 1.3,
             }}
           >
-            {showSuccess
-              ? "Gati!"
-              : step === 0
-                ? "Cili është departamenti juaj?"
-                : "Të dhënat tuaja"}
+            {showSuccess ? "Gati!" : "Të dhënat tuaja"}
           </h2>
         </div>
-
-        {/* Steps */}
-        {!showSuccess && <StepIndicator current={step} />}
 
         {/* Step content */}
         {showSuccess ? (
           <StepSuccess />
-        ) : step === 0 ? (
-          <StepDepartament onNext={handleStepOne} />
         ) : (
-          <StepPersonalDetails
+          <StepOneStudentDetails
             onBack={() => setStep(0)}
-            onFinish={handleStepTwo}
+            onFinish={handleFinish}
             isLoading={isPending}
           />
         )}
@@ -126,4 +107,4 @@ const CompleteProfileStepper = ({
   );
 };
 
-export default CompleteProfileStepper;
+export default CompleteStudentProfileStepper;
