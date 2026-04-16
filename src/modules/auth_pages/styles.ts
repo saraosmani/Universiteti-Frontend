@@ -1,4 +1,4 @@
-import { ACCENT, BORDER, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/styles";
+import { ACCENT, BORDER, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/common";
 
  export const antdTheme = {
   token: {

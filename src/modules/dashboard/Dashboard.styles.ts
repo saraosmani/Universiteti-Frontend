@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { BORDER, MUTED } from "../../styles/colors";
+import { BORDER, MUTED } from "../../styles/common";
 
 /**
  * Dashboard page specific styles
