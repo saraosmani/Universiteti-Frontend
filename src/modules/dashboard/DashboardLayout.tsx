@@ -162,27 +162,27 @@ console.log(user);
 
   const menuItems = userLoading ? [] : user?.role === "student" ? studentMenuItems : pedagogMenuItems;
 
-  const profileDropdownItems: MenuProps["items"] = [
-    {
-      key: "info",
-      label: (
-        <div style={{ padding: "4px 0" }}>
-          <div style={{ fontWeight: 600, color: NAVY }}>
-            {user?.name} {user?.surname || ""}
-          </div>
-          <div style={{ fontSize: 12, color: MUTED }}>{user?.email}</div>
+ const profileDropdownItems: MenuProps["items"] = [
+  {
+    key: "info",
+    label: (
+      <div style={{ padding: "4px 0" }}>
+        <div style={{ fontWeight: 600, color: NAVY }}>
+          {user?.name} {user?.surname || ""}
         </div>
-      ),
-      disabled: true,
-    },
-    { type: "divider" },
-    {
-      key: "logout",
-      icon: <LogoutOutlined style={{ color: "#EF4444" }} />,
-      label: <span style={{ color: "#EF4444", fontWeight: 600 }}>Dil</span>,
-      onClick: logout,
-    },
-  ];
+        <div style={{ fontSize: 12, color: MUTED }}>{user?.email}</div>
+      </div>
+    ),
+    onClick: () => navigate('/profili'),
+  },
+  { type: "divider" },
+  {
+    key: "logout",
+    icon: <LogoutOutlined style={{ color: "#EF4444" }} />,
+    label: <span style={{ color: "#EF4444", fontWeight: 600 }}>Dil</span>,
+    onClick: logout,
+  },
+]
 
   return (
     <AntLayout

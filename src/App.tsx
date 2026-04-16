@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { selectIsAuthenticated } from "./store/authSlice";
 import Dashboard from "./modules/dashboard/Dashboard";
 import OAuthCallback from "./modules/auth_pages/components/OauthCallback";
-import AuthPage from "./modules/auth_pages/AuthPage";
+import AuthPage                     from "./modules/auth_pages/AuthPage";
 import ProvimePage from "./modules/provime/ProvimePage";
 import OrariPage from "./modules/orari/OrariPage";
 import NotaPage from "./modules/vleresimi_studenteve/NotaPage";
@@ -15,6 +15,7 @@ import SectionsPage from "./modules/seksion_pedagog/SectionsPage";
 import RegjistrimStudent from "./modules/regjistrim_student/RegjistrimStudent";
 import LibrezaNotave from "./modules/Libreza_notave/LibrezaNotave";
 import DokumentPage from "./modules/dokumenta/DokumentPage";
+import ProfilePage from "./modules/profil/ProfilPage";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -58,6 +59,7 @@ export default function App() {
         <Route path="/regjistrim" element={<RegjistrimStudent />} />
         <Route path="/libreza-e-notave" element={<LibrezaNotave />} />
         <Route path="/dokumenta" element={<DokumentPage />} />
+        <Route path="/profili" element={<ProfilePage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/auth" replace />} />

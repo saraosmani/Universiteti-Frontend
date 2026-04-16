@@ -1,13 +1,14 @@
 import axios from "axios";
 
 export const BASE_URL =
+ 
   process.env.REACT_APP_API_URL ?? "http://localhost:8085";
 
 export const post = async <TBody, TResponse>(
   endpoint: string,
   body: TBody,
 ): Promise<TResponse> => {
-  try {
+ try {
     const response = await axios.post<TResponse>(
       `${BASE_URL}${endpoint}`,
       body,
@@ -53,6 +54,25 @@ export const postAuthenticated = async <TBody, TResponse>(
 };
 
 export const getAuthenticated = async <TResponse>(
+  endpoint: string,
+  token: string,
+): Promise<TResponse> => {
+  try {
+    const response = await axios.get<TResponse>(`${BASE_URL}${endpoint}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || "Request failed";
+    throw new Error(errorMessage);
+  }
+};
+
+export const deleteAuthenticated = async <TResponse>(
   endpoint: string,
   token: string,
 ): Promise<TResponse> => {
