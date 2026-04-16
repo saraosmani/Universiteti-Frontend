@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector } from "../../store/hooks";
-import { selectToken } from "../../store/authSlice";
+import { selectToken, User } from "../../store/authSlice";
 import axios from "axios";
 import { BASE_URL } from "../../api/api";
 
@@ -21,7 +21,7 @@ interface CompleteProfileResponse {
   success: boolean;
   message: string;
   data: {
-    user: any;
+    user: User;
   };
 }
 

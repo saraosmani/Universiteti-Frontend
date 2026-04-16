@@ -20,12 +20,15 @@ export const post = async <TBody, TResponse>(
       },
     );
     return response.data;
-  } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.errors?.email?.[0] ||
-      "Request failed";
-    throw new Error(errorMessage);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.errors?.email?.[0] ||
+        "Diçka shkoi gabim!";
+      throw new Error(errorMessage);
+    }
+    throw new Error("Diçka shkoi gabim!");
   }
 };
 
@@ -47,9 +50,12 @@ export const postAuthenticated = async <TBody, TResponse>(
       },
     );
     return response.data;
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.message || "Request failed";
-    throw new Error(errorMessage);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message || "Diçka shkoi gabim!";
+      throw new Error(errorMessage);
+    }
+    throw new Error("Diçka shkoi gabim!");
   }
 };
 
@@ -66,9 +72,12 @@ export const getAuthenticated = async <TResponse>(
       },
     });
     return response.data;
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.message || "Request failed";
-    throw new Error(errorMessage);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message || "Diçka shkoi gabim!";
+      throw new Error(errorMessage);
+    }
+    throw new Error("Diçka shkoi gabim!");
   }
 };
 
@@ -85,9 +94,12 @@ export const deleteAuthenticated = async <TResponse>(
       },
     });
     return response.data;
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.message || "Request failed";
-    throw new Error(errorMessage);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message || "Diçka shkoi gabim!";
+      throw new Error(errorMessage);
+    }
+    throw new Error("Diçka shkoi gabim!");
   }
 };
 
@@ -109,26 +121,12 @@ export const putAuthenticated = async <TBody, TResponse>(
       },
     );
     return response.data;
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.message || "Request failed";
-    throw new Error(errorMessage);
-  }
-};
- 
-export const getProfileStatusApi = async (token: string): Promise<{
-  success: boolean;
-  is_complete: boolean;
-}> => {
-  const response = await axios.get<{ success: boolean; is_complete: boolean }>(
-    `${BASE_URL}/api/pedagogues/profile-status`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message || "Diçka shkoi gabim!";
+      throw new Error(errorMessage);
     }
-  );
-  return response.data;
+    throw new Error("Diçka shkoi gabim!");
+  }
 };
  
