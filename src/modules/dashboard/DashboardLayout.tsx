@@ -30,7 +30,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   const selectedKey = location.pathname;
-console.log(user);
 
   const pedagogMenuItems: MenuProps["items"] = [
     {

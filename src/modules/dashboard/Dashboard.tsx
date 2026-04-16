@@ -16,15 +16,6 @@ const Dashboard = () => {
   const { data: statusData, refetch, isLoading } = useProfileStatus(isPedag || isStudent);
   const needsCompletion = (isPedag || isStudent) && statusData?.is_complete === false;
 
-  console.log("Dashboard Debug:", {
-    role: user?.role,
-    isPedag,
-    isStudent,
-    statusData,
-    isLoading,
-    needsCompletion
-  });
-
   const handleProfileComplete = () => {
     queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     queryClient.invalidateQueries({ queryKey: ["profileStatus"] });
