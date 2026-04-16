@@ -7,9 +7,9 @@ export interface RegisterFormValues {
   phone_number: string;
   country: string;
   role: string;
-  gender: string;
-  birth_date: string;
-  ped_tit: string;
+  gender?: string;
+  birth_date?: string;
+  ped_tit?: string;
 }
 
 export type AuthMode = "login" | "register";

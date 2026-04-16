@@ -10,7 +10,7 @@ import NotaPage from "./modules/vleresimi_studenteve/NotaPage";
 import PrezencaPage from "./modules/prezenca/PrezencaPage";
 import NjoftimePage from "./modules/njoftime/NjoftimePage";
 import CileSimePage from "./modules/cilesime/CileSimePage";
-import CompleteProfileForm from "./modules/auth_pages/components/CompleteProfile";
+import CompleteProfileForm from "./modules/auth_pages/components/CompleteGoogleRegistration";
 import SectionsPage from "./modules/seksion_pedagog/SectionsPage";
 import RegjistrimStudent from "./modules/regjistrim_student/RegjistrimStudent";
 import LibrezaNotave from "./modules/Libreza_notave/LibrezaNotave";

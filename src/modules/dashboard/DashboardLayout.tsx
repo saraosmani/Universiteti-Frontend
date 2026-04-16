@@ -1,7 +1,6 @@
 import React from "react";
 import { useLogout } from "../../hooks/auth/useLogout";
 import { useCurrentUser } from "../../hooks/auth/useGetCurrentUser";
-import { BORDER, MUTED, NAVY, WHITE } from "../../styles/colors";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Layout as AntLayout, Menu, Avatar, Dropdown, Tag } from "antd";
 import type { MenuProps } from "antd";
@@ -18,6 +17,7 @@ import {
   ScheduleOutlined,
 } from "@ant-design/icons";
 import { User } from "../../store/authSlice";
+import { BORDER, MUTED, NAVY, WHITE } from "../../styles/common";
 
 const { Sider, Header, Content } = AntLayout;
 const SIDEBAR_DARK = "#0B1120";

@@ -3,10 +3,10 @@ import { Card, Typography, Alert} from 'antd'
 
 import { useAppSelector } from '../../store/hooks'
 import { selectUser } from '../../store/authSlice'
-import { NAVY } from '../../styles/colors'
 import Layout from '../dashboard/DashboardLayout'
 import StudentProfile from './components/ProfilStudent'
 import PedagogProfile from './components/ProfilPedagog'
+import { NAVY } from '../../styles/common'
 
 const { Title } = Typography
 

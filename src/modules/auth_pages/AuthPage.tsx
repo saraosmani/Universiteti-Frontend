@@ -9,7 +9,7 @@ import GoogleButton from "./components/GoogleButton";
 import { antdTheme, globalCss } from "./AuthPage.styles";
 import { AuthMode} from "./definitions";
 import CornerOrnament from "./components/CornerOrnament";
-import { ACCENT, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/colors";
+import { ACCENT, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/common";
 
 const tabs: { mode: AuthMode; label: string }[] = [
   { mode: "login",    label: "HYRJE"    },

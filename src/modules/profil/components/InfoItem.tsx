@@ -1,6 +1,6 @@
 import React from 'react'
 import { Typography, Divider } from 'antd'
-import { NAVY } from '../../../styles'
+import { NAVY } from '../../../styles/common'
 
 const { Text } = Typography
 

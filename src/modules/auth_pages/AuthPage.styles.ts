@@ -1,5 +1,5 @@
 import type { ThemeConfig } from "antd";
-import { ACCENT, BORDER, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/colors";
+import { ACCENT, BORDER, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/common";
 
 /**
  * Auth page specific theme configuration

@@ -1,15 +1,7 @@
-import { Form, Input, Select, DatePicker } from "antd";
+import { Form, Input, Select } from "antd";
 import type { FormInstance } from "antd";
 import { COUNTRIES } from "../utils/countries";
 import { DIGITS_RE } from "../utils/validation";
-
-const PEDAGOG_TITLES = [
-  { value: "Msc.",        label: "Msc."        },
-  { value: "Dr.",         label: "Dr."         },
-  { value: "Prof.Dr.",    label: "Prof.Dr."    },
-  { value: "Prof.As.Dr.", label: "Prof.As.Dr." },
-  { value: "Doc.",        label: "Doc."        },
-];
 
 interface ProfileFieldsProps {
   form: FormInstance;
@@ -28,11 +20,6 @@ const ProfileFields = ({
   setRole,
   onCountryChange,
 }: ProfileFieldsProps) => {
-  const colStyle = {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "0 16px",
-  };
 
   const dialSelector = (
     <Select
@@ -63,7 +50,7 @@ const ProfileFields = ({
   return (
     <>
       {/* Row 1: Country + Birth Date */}
-      <div style={colStyle}>
+     
         <Form.Item
           name="country"
           rules={[{ required: true, message: "Zgjidhni vendin" }]}
@@ -84,19 +71,7 @@ const ProfileFields = ({
           />
         </Form.Item>
 
-        <Form.Item
-          name="birth_date"
-          rules={[{ required: true, message: "Zgjidhni datëlindjen" }]}
-          style={{ marginBottom: 16 }}
-        >
-          <DatePicker
-            size="large"
-            style={{ width: "100%" }}
-            placeholder="Datëlindja"
-            format="DD/MM/YYYY"
-          />
-        </Form.Item>
-      </div>
+    
 
       {/* Phone — full width */}
       <Form.Item
@@ -123,8 +98,7 @@ const ProfileFields = ({
         />
       </Form.Item>
 
-      {/* Row 2: Role + Gender */}
-      <div style={colStyle}>
+    
         <Form.Item
           name="role"
           rules={[{ required: true, message: "Zgjidhni rolin" }]}
@@ -145,36 +119,6 @@ const ProfileFields = ({
           />
         </Form.Item>
 
-        <Form.Item
-          name="gender"
-          rules={[{ required: true, message: "Zgjidhni gjininë" }]}
-          style={{ marginBottom: 16 }}
-        >
-          <Select
-            placeholder="Gjinia"
-            size="large"
-            options={[
-              { value: "M", label: "Mashkull" },
-              { value: "F", label: "Femër"    },
-            ]}
-          />
-        </Form.Item>
-      </div>
-
-      {/* Pedagog Title — full width, conditional */}
-      {role === "pedagog" && (
-        <Form.Item
-          name="ped_tit"
-          rules={[{ required: true, message: "Zgjidhni titullin" }]}
-          style={{ marginBottom: 16 }}
-        >
-          <Select
-            placeholder="Titulli Akademik"
-            size="large"
-            options={PEDAGOG_TITLES}
-          />
-        </Form.Item>
-      )}
     </>
   );
 };

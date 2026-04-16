@@ -4,10 +4,10 @@ import {
   UserOutlined, MailOutlined, CalendarOutlined,
   PhoneOutlined, BankOutlined, BookOutlined,
 } from '@ant-design/icons'
-import { NAVY } from '../../../styles';
 import { formatDate } from '../../../utils/utils';
 import { useGetPedagogueById } from '../../../hooks/pedagog/useGetPedagogById';
 import { InfoItem, iconStyle } from './InfoItem';
+import { NAVY } from '../../../styles/common';
 
 const { Title, Text } = Typography
 

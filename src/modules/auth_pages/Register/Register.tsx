@@ -4,9 +4,19 @@ import { useState } from "react";
 import { inputStyle, primaryBtnStyle } from "../../../styles/common";
 import type { AuthResponse } from "../../../api/authApi";
 import { COUNTRIES } from "../utils/countries";
-import { RegisterFormValues } from "../definitions";
 import { useRegister } from "../../../hooks/auth/useRegister";
 import ProfileFields from "../components/ProfileFields";
+
+interface RegisterFormValues {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phone_number: string;
+  country: string;
+  role: string;
+}
 
 interface RegisterFormProps {
   onSuccess?: (data: AuthResponse) => void;
@@ -31,10 +41,16 @@ const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
   };
 
   const handleFinish = ({
-    name, surname, email, password, phone_number, country, role, gender, birth_date, ped_tit,
+    name,
+    surname,
+    email,
+    password,
+    phone_number,
+    country,
+    role,
   }: RegisterFormValues) => {
     const fullPhone = `+${dialCode}${phone_number.replace(/\s/g, "")}`;
-    register({ name, surname, email, password, phone_number: fullPhone, country, role, gender, birth_date, ped_tit });
+    register({ name, surname, email, password, phone_number: fullPhone, country, role });
   };
 
   return (
@@ -73,7 +89,7 @@ const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
         </Form.Item>
       </div>
 
-      {/* Email — full width */}
+      {/* Email */}
       <Form.Item
         name="email"
         rules={[{ required: true, type: "email", message: "Shkruani email-in" }]}
@@ -87,17 +103,18 @@ const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
         />
       </Form.Item>
 
-      {/* Shared profile fields */}
+      {/* Role, Country, Phone */}
       <ProfileFields
         form={form}
         dialCode={dialCode}
         setDialCode={setDialCode}
         role={role}
+
         setRole={setRole}
         onCountryChange={handleCountryChange}
       />
 
-      {/* Password + Confirm */}
+      {/* Password */}
       <Form.Item
         name="password"
         rules={[{ required: true, min: 8, message: "Minimumi 8 karaktere" }]}

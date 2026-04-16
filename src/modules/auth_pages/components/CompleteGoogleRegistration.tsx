@@ -28,7 +28,7 @@ interface AuthResponse {
   };
 }
 
-const CompleteProfileForm = () => {
+const CompleteGoogleRegistration = () => {
   const [form] = Form.useForm<ProfileFormBody>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -49,7 +49,7 @@ const CompleteProfileForm = () => {
     setLoading(true);
     try {
       const data = await post<ProfileFormBody, AuthResponse>(
-        "/api/auth/complete_profile",
+        "/api/auth/complete_google_registration",
         { temp_token: tempToken, phone_number: fullPhone, country, role, gender, birth_date, ped_tit }
       );
       sessionStorage.removeItem("oauth_temp_token");
@@ -140,4 +140,4 @@ const CompleteProfileForm = () => {
   );
 };
 
-export default CompleteProfileForm;
+export default CompleteGoogleRegistration;

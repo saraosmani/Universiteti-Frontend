@@ -5,11 +5,11 @@ import {
   IdcardOutlined, ManOutlined, WomanOutlined,
 } from '@ant-design/icons'
 import { useGetStudentById } from '../../../hooks/student/useGetStudentById';
-import { NAVY } from '../../../styles';
 import { formatDate } from '../../../utils/utils';
 import { InfoItem, iconStyle } from './InfoItem';
+import { NAVY } from '../../../styles/common';
 
-const { Title, Text } = Typography
+const { Title } = Typography
 
 const StudentProfile = ({ id }: { id: string }) => {
   const { data: student, isLoading, error } = useGetStudentById(id)
