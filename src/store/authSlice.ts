@@ -1,3 +1,31 @@
+export interface Pedagog {
+  ped_id: string;
+  ped_em: string;
+  ped_mb: string;
+  ped_gjin: string;
+  ped_tit: string;
+  ped_dl: string;
+  ped_tel: string;
+  ped_email: string;
+  ped_dt: string;
+  dep_id: string | null;
+  user_id: number;
+}
+
+export interface Student {
+  stu_id: string;
+  stu_em: string;
+  stu_mb: string;
+  stu_atesi: string;
+  stu_gjini: string;
+  stu_dl: string;
+  stu_nuid: string;
+  stu_email: string;
+  stu_dat_regjistrim: string;
+  stu_status: string;
+  user_id: number;
+}
+
 export interface User {
   id: number;
   name: string;
@@ -7,6 +35,8 @@ export interface User {
   country?: string | null;
   surname?: string | null;
   title?: string | null;
+  pedagog?: Pedagog;
+  student?: Student;
 }
 
 export interface AuthState {

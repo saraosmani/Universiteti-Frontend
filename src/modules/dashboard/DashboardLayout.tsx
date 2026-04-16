@@ -339,7 +339,7 @@ console.log(user);
                 <span
                   style={{ fontSize: 12, color: MUTED, whiteSpace: "nowrap" }}
                 >
-                  {user?.role === "student" ? "Student" : "Pedagog"} · UAMD
+                  {user?.role === "student" ? user?.student?.stu_nuid : user?.pedagog?.ped_id} · UAMD
                 </span>
               </div>
               <Avatar
