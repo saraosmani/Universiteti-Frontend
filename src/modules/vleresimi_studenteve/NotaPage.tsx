@@ -254,18 +254,12 @@ const NotaPage = () => {
                   onClick={handleSaveAll}
                   loading={isPending}
                   disabled={Object.keys(editedValues).length === 0}
-                 style={{
-                    background:
-                      Object.keys(editedValues).length === 0 ? "#b0b8c9" : NAVY,
+                  style={{
+                    background: NAVY,
                     border: "none",
                     borderRadius: 8,
                     height: 40,
                     paddingInline: 24,
-                    opacity: Object.keys(editedValues).length === 0 ? 0.6 : 1,
-                    cursor:
-                      Object.keys(editedValues).length === 0
-                        ? "not-allowed"
-                        : "pointer",
                   }}
                 >
                   Ruaj të gjitha notat
