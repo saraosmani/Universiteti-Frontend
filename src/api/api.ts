@@ -86,7 +86,7 @@ export const deleteAuthenticated = async <TResponse>(
   token: string,
 ): Promise<TResponse> => {
   try {
-    const response = await axios.get<TResponse>(`${BASE_URL}${endpoint}`, {
+    const response = await axios.delete<TResponse>(`${BASE_URL}${endpoint}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
