@@ -13,7 +13,7 @@ import CileSimePage from "./modules/cilesime/CileSimePage";
 import CompleteProfileForm from "./modules/auth_pages/components/CompleteGoogleRegistration";
 import SectionsPage from "./modules/seksion_pedagog/SectionsPage";
 import RegjistrimStudent from "./modules/regjistrim_student/RegjistrimStudent";
-import LibrezaNotave from "./modules/Libreza_notave/LibrezaNotave";
+import LibrezaNotave from "./modules/libreza_notave/LibrezaNotave";
 import DokumentPage from "./modules/dokumenta/DokumentPage";
 import ProfilePage from "./modules/profil/ProfilPage";
 
