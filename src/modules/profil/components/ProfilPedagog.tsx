@@ -17,8 +17,8 @@ const PedagogProfile = ({ id }: { id: string }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   if (isLoading) return <Spin size="large" />
-  if (error)    return <Alert type="error"   message="Gabim gjatë ngarkimit" description={error.message} showIcon />
-  if (!pedagog) return <Alert type="warning" message="Pedagogu nuk u gjet" showIcon />
+  if (error) return <Alert type="warning" message="Profili nuk është plotësuar ende" description="Ju lutem plotësoni profilin tuaj fillimisht." showIcon />
+  if (!pedagog) return <Alert type="warning" message="Profili nuk është plotësuar ende" description="Ju lutem plotësoni profilin tuaj fillimisht." showIcon />
 
   const initials = `${pedagog.ped_em?.[0] ?? ''}${pedagog.ped_mb?.[0] ?? ''}`.toUpperCase()
 

@@ -102,10 +102,6 @@ const EditPedagogModal = ({ open, onClose, pedagog }: EditPedagogModalProps) => 
             <Input disabled />
           </Form.Item>
         </div>
-
-        <p style={{ fontSize: 12, color: '#888' }}>
-          ⓘ Fushat e grisura nuk mund të ndryshohën nga pedagogi.
-        </p>
       </Form>
     </Modal>
   )

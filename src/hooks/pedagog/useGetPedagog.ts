@@ -1,27 +1,38 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector } from "../../store/hooks";
-import { Pedagog, selectToken } from "../../store/authSlice";
-import { getAuthenticated } from "../../api/api";
+import { selectToken } from "../../store/authSlice";
+import { putAuthenticated } from "../../api/api";
 
-interface PedagogListResponse {
-  success: boolean;
-  data: Pedagog[];
+interface UpdatePedagogPayload {
+  ped_em?: string;
+  ped_mb?: string;
+  ped_tel?: string;
+  ped_email?: string;
+  ped_tit?: string;
 }
 
-export const useGetPedagogues = () => {
-  const token = useAppSelector(selectToken);
+interface UpdatePedagogResponse {
+  success: boolean;
+  message: string;
+  data: any;
+}
 
-  return useQuery({
-    queryKey: ["pedagogues"],
-    queryFn: async () => {
-      const data = await getAuthenticated<PedagogListResponse>(
-        "/api/pedagogues",
+export const useUpdatePedagog = () => {
+  const token = useAppSelector(selectToken);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, payload }: { id: string; payload: UpdatePedagogPayload }) => {
+      const data = await putAuthenticated<UpdatePedagogPayload, UpdatePedagogResponse>(
+        `/api/pedagogues/${id}`,
+        payload,
         token!
       );
-      return data.data;
+      return data;
     },
-    enabled: !!token,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      queryClient.invalidateQueries({ queryKey: ["pedagogues"] });
+    },
   });
 };

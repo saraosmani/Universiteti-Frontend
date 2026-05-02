@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAppSelector } from "../../store/hooks";
-import { selectToken, User } from "../../store/authSlice";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { selectToken, setUser, User } from "../../store/authSlice";
 import axios from "axios";
 import { BASE_URL } from "../../api/api";
 
- 
 interface UseCompleteProfileOptions {
   onSuccess?: () => void;
   onError?: (error: Error) => void;
@@ -14,7 +13,7 @@ export interface CompleteProfilePayload {
   dep_id: string;
   ped_tit: string;
   ped_gjin: "M" | "F";
-  ped_dl: string; 
+  ped_dl: string;
 }
 
 interface CompleteProfileResponse {
@@ -42,18 +41,20 @@ const completePedagogProfileApi = async (
   );
   return response.data;
 };
- 
+
 export const useCompletePedagogProfile = ({
   onSuccess,
   onError,
 }: UseCompleteProfileOptions = {}) => {
   const queryClient = useQueryClient();
   const token = useAppSelector(selectToken);
- 
+  const dispatch = useAppDispatch();
+
   return useMutation({
     mutationFn: (payload: CompleteProfilePayload) =>
       completePedagogProfileApi(payload, token!),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      dispatch(setUser({ user: data.data.user, token: token! }));
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
       queryClient.invalidateQueries({ queryKey: ["profileStatus"] });
       onSuccess?.();
