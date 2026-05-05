@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector } from "../../store/hooks";
 import { selectToken } from "../../store/authSlice";
 import { putAuthenticated } from "../../api/api";
+import { useCurrentUser } from "../auth/useGetCurrentUser";
 
 interface UpdatePedagogPayload {
   ped_em?: string;
@@ -20,6 +21,7 @@ interface UpdatePedagogResponse {
 export const useUpdatePedagog = () => {
   const token = useAppSelector(selectToken);
   const queryClient = useQueryClient();
+  const { refetch: refetchCurrentUser } = useCurrentUser();
 
   return useMutation({
     mutationFn: async ({ id, payload }: { id: string; payload: UpdatePedagogPayload }) => {
@@ -30,8 +32,8 @@ export const useUpdatePedagog = () => {
       );
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    onSuccess: async () => {
+      await refetchCurrentUser();
       queryClient.invalidateQueries({ queryKey: ["pedagogues"] });
     },
   });
