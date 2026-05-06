@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { BORDER, MUTED } from "../../styles/styles";
+import { BORDER, MUTED } from "../../styles/common";
 
 export const signOutBtnBase: CSSProperties = {
   background:    "transparent",

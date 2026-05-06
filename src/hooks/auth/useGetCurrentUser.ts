@@ -15,9 +15,7 @@ export const useCurrentUser = () => {
       return data.user;
     },
     enabled: !!token,
-    staleTime: 0, // Always fetch fresh data
-    gcTime: 0, // Don't cache
-    refetchOnMount: 'always', // Always refetch on mount
-    refetchOnWindowFocus: true, // Refetch when window regains focus
+    refetchOnMount: 'always', 
+    refetchOnWindowFocus: true, 
   });
 };

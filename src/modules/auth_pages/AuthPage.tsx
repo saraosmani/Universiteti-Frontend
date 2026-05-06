@@ -9,7 +9,7 @@ import GoogleButton from "./components/GoogleButton";
 import { antdTheme, globalCss } from "./AuthPage.styles";
 import { AuthMode} from "./definitions";
 import CornerOrnament from "./components/CornerOrnament";
-import { ACCENT, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/colors";
+import { ACCENT, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/common";
 
 const tabs: { mode: AuthMode; label: string }[] = [
   { mode: "login",    label: "HYRJE"    },
@@ -38,7 +38,7 @@ const AuthPage = () => {
         fontFamily: "'Inter', 'Segoe UI', sans-serif",
       }}>
 
-        {/* ── Left panel — navy ─────────────────────────────────────────── */}
+       
         <div style={{
           flex:          "0 0 44%",
           background:    `linear-gradient(160deg, ${NAVY} 0%, ${NAVY2} 100%)`,
@@ -49,7 +49,6 @@ const AuthPage = () => {
           position:      "relative",
           overflow:      "hidden",
         }}>
-          {/* Decorative circle blobs */}
           <div style={{
             position: "absolute", bottom: -120, right: -120,
             width: 400, height: 400, borderRadius: "50%",
@@ -61,13 +60,11 @@ const AuthPage = () => {
             background: "rgba(255,255,255,0.03)", pointerEvents: "none",
           }} />
 
-          {/* Corner ornaments */}
           <CornerOrnament top={28}    left={28}  />
           <CornerOrnament top={28}    right={28} />
           <CornerOrnament bottom={28} left={28}  />
           <CornerOrnament bottom={28} right={28} />
 
-          {/* Logo */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, zIndex: 1 }}>
             <div style={{
               width: 46, height: 46,
@@ -88,7 +85,6 @@ const AuthPage = () => {
             </div>
           </div>
 
-          {/* Main copy */}
           <div style={{ zIndex: 1 }}>
             <h1 style={{
               color:        WHITE,
@@ -130,7 +126,6 @@ const AuthPage = () => {
             </div>
           </div>
 
-          {/* Footer */}
           <div style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, zIndex: 1 }}>
             © {new Date().getFullYear()} Universiteti Aleksander Moisiu, Durrës
           </div>
@@ -147,7 +142,6 @@ const AuthPage = () => {
         }}>
           <div style={{ width: "100%", maxWidth: 380 }}>
 
-            {/* Heading */}
             <h2 style={{
               color:        NAVY,
               fontSize:     26,
@@ -163,7 +157,6 @@ const AuthPage = () => {
                 : "Regjistrohuni me email-in e universitetit"}
             </p>
 
-            {/* Tab switcher */}
             <div style={{
               display:      "flex",
               marginBottom: 28,
@@ -197,7 +190,6 @@ const AuthPage = () => {
               ))}
             </div>
 
-            {/* Forms */}
             <ConfigProvider theme={antdTheme}>
               {mode === "login"
                 ? <LoginForm   onSuccess={handleSuccess} onError={handleError} />
