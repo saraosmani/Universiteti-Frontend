@@ -9,7 +9,8 @@ import { antdTheme, globalCss } from "./AuthPage.styles";
 import { AuthMode} from "./definitions";
 import CornerOrnament from "./components/CornerOrnament";
 import { ACCENT, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/common";
-import LoginForm from "./Login/Login";
+import LoginForm from "./login/Login";
+
 
 const tabs: { mode: AuthMode; label: string }[] = [
   { mode: "login",    label: "HYRJE"    },
