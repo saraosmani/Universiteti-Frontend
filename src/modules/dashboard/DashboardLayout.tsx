@@ -245,8 +245,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           theme="dark"
         />
 
-        
-        
+        {/* Logout at bottom */}
         <div
           onClick={logout}
           style={{
@@ -268,9 +267,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </Sider>
 
-      
+      {/* ── Main area ── */}
       <AntLayout>
-        
+        {/* Header */}
         <Header
           style={{
             background: WHITE,
@@ -286,7 +285,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             zIndex: 10,
           }}
         >
-          
+          {/* Search hint */}
           <div
             style={{
               display: "flex",
@@ -301,7 +300,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             Kërko...
           </div>
 
-          
+          {/* Profile dropdown */}
           <Dropdown
             menu={{ items: profileDropdownItems }}
             trigger={["click"]}
@@ -357,7 +356,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </Dropdown>
         </Header>
 
-       
+        {/* Page content */}
         <Content
           style={{
             padding: 32,

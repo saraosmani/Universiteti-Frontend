@@ -20,6 +20,7 @@ import ProfilePage from "./modules/profil/ProfilPage";
 function ProtectedRoute() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   return isAuthenticated ? <Outlet /> : <Navigate to="/auth" replace />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/auth" replace />;
 }
 
 function GuestRoute({ children }: { children: React.ReactNode }) {

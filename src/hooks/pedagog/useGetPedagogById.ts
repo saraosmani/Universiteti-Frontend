@@ -5,7 +5,7 @@ import { getAuthenticated } from "../../api/api";
 
 interface PedagogResponse {
   success: boolean;
-  data: Pedagog;
+  data: Pedagog | null;
 }
 
 export const useGetPedagogueById = (id: string) => {
@@ -18,7 +18,7 @@ export const useGetPedagogueById = (id: string) => {
         `/api/pedagogues/${id}`,
         token!
       );
-      return data.data;
+      return data.data ?? null;
     },
     enabled: !!token && !!id,
     refetchOnMount: "always",

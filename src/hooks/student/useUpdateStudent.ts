@@ -24,7 +24,7 @@ const updateStudent = async (
     payload,
     token
   );
-  return response.data.data; 
+  return response.data;
 };
 
 
@@ -36,7 +36,7 @@ export const useUpdateStudent = ({ onSuccess, onError }: UseUpdateStudentCallbac
     mutationFn: ({ id, payload }) => updateStudent(id, payload, token!),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["students"] });
-      queryClient.invalidateQueries({ queryKey: ["student", data.id] }); 
+      queryClient.invalidateQueries({ queryKey: ["student", data.stu_id] });
       onSuccess?.(data);
     },
     onError: (err) => onError?.(err),
