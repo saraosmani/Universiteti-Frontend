@@ -4,7 +4,7 @@ import { selectIsAuthenticated } from "./store/authSlice";
 import Dashboard from "./modules/dashboard/Dashboard";
 import OAuthCallback from "./modules/auth_pages/components/OauthCallback";
 import AuthPage from "./modules/auth_pages/AuthPage";
-import ProvimePage from "./modules/Provime/ProvimePage";
+import ProvimePage from "./modules/provime/ProvimePage";
 import OrariPage from "./modules/orari/OrariPage";
 import NotaPage from "./modules/vleresimi_studenteve/NotaPage";
 import PrezencaPage from "./modules/prezenca/PrezencaPage";
