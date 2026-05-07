@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { selectToken } from "../../store/authSlice";
-import { getSeksionetAktive, getSeksionetHistorik, Seksion, SeksionHistorik } from "../../api/seksionApi";
+import React, { useMemo } from "react";
+import { useState } from "react";
 import Layout from "../dashboard/DashboardLayout";
 import { NAVY, WHITE } from "../../styles/common";
+import { useSeksionetAktive, Seksion } from "../../hooks/seksion/useSeksionetAktive";
+import { useSeksionetHistorik, SeksionHistorik } from "../../hooks/seksion/useSeksionetHistorik";
 
 const lojiBadgeColor: Record<string, { bg: string; color: string }> = {
   Leksion:   { bg: "#EEF2FF", color: "#6366F1" },
@@ -55,21 +55,12 @@ const SectionCard = ({ s }: { s: Seksion }) => {
 };
 
 const SeksionetPage: React.FC = () => {
-  const token = useSelector(selectToken);
-  const [seksionet, setSeksionet] = useState<Seksion[]>([]);
-  const [historiku, setHistoriku] = useState<SeksionHistorik[]>([]);
   const [tab, setTab] = useState<"aktive" | "historik">("aktive");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!token) return;
-    setLoading(true);
-    Promise.all([getSeksionetAktive(token), getSeksionetHistorik(token)])
-      .then(([aktive, hist]) => { setSeksionet(aktive); setHistoriku(hist); })
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
-  }, [token]);
+  const { data: seksionet = [], isLoading: loadingAktive, error: errorAktive } = useSeksionetAktive();
+  const { data: historiku = [], isLoading: loadingHistorik } = useSeksionetHistorik();
+  const loading = loadingAktive || loadingHistorik;
+  const error = errorAktive?.message ?? null;
 
   const stats = useMemo(() => {
     const lende = new Set(seksionet.map(s => s.lenda.kod)).size;
@@ -91,7 +82,6 @@ const SeksionetPage: React.FC = () => {
 
   return (
     <Layout>
-      {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <h2 style={{ fontSize: 22, fontWeight: 700, color: NAVY, margin: 0 }}>Seksionet e Mia</h2>
         {semLabel && (
@@ -101,7 +91,6 @@ const SeksionetPage: React.FC = () => {
         )}
       </div>
 
-      {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
         <StatCard label="Seksione aktive" value={stats.seksione} />
         <StatCard label="Lëndë të ndryshme" value={stats.lende} />
@@ -109,35 +98,15 @@ const SeksionetPage: React.FC = () => {
         <StatCard label="Orë në javë" value={stats.ore} />
       </div>
 
-      {/* Tabs */}
       <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
-        <button
-          onClick={() => setTab("aktive")}
-          style={{
-            padding: "8px 20px", borderRadius: 8, cursor: "pointer",
-            background: tab === "aktive" ? NAVY : WHITE,
-            color: tab === "aktive" ? WHITE : "#64748B",
-            fontWeight: 600, fontSize: 13,
-            border: tab === "aktive" ? "none" : "1px solid #E2E8F0",
-          }}
-        >
+        <button onClick={() => setTab("aktive")} style={{ padding: "8px 20px", borderRadius: 8, cursor: "pointer", background: tab === "aktive" ? NAVY : WHITE, color: tab === "aktive" ? WHITE : "#64748B", fontWeight: 600, fontSize: 13, border: tab === "aktive" ? "none" : "1px solid #E2E8F0" }}>
           Kartat
         </button>
-        <button
-          onClick={() => setTab("historik")}
-          style={{
-            padding: "8px 20px", borderRadius: 8, cursor: "pointer",
-            background: tab === "historik" ? NAVY : WHITE,
-            color: tab === "historik" ? WHITE : "#64748B",
-            fontWeight: 600, fontSize: 13,
-            border: tab === "historik" ? "none" : "1px solid #E2E8F0",
-          }}
-        >
+        <button onClick={() => setTab("historik")} style={{ padding: "8px 20px", borderRadius: 8, cursor: "pointer", background: tab === "historik" ? NAVY : WHITE, color: tab === "historik" ? WHITE : "#64748B", fontWeight: 600, fontSize: 13, border: tab === "historik" ? "none" : "1px solid #E2E8F0" }}>
           Historiku
         </button>
       </div>
 
-      {/* Kartat */}
       {tab === "aktive" && (
         seksionet.length === 0
           ? <p style={{ color: "#94A3B8", textAlign: "center", marginTop: 40 }}>Nuk ka seksione për semestrin aktiv.</p>
@@ -146,7 +115,6 @@ const SeksionetPage: React.FC = () => {
             </div>
       )}
 
-      {/* Historiku */}
       {tab === "historik" && (
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
