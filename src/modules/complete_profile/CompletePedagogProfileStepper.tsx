@@ -17,11 +17,15 @@ const CompletePedagogProfileStepper = ({
   const [step, setStep] = useState(0);
   const [stepOneData, setStepOneData] = useState<StepOneValues | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [serverErrors, setServerErrors] = useState<Record<string, string[]>>({});
 
   const { mutate: completeProfile, isPending } = useCompletePedagogProfile({
     onSuccess: () => {
       setShowSuccess(true);
       setTimeout(() => onComplete(), 2000);
+    },
+    onError: (errors) => {
+      setServerErrors(errors);
     },
   });
 
@@ -41,7 +45,6 @@ const CompletePedagogProfileStepper = ({
   };
 
   return (
-    /* Fullscreen overlay */
     <div
       style={{
         position: "fixed",
@@ -55,7 +58,6 @@ const CompletePedagogProfileStepper = ({
         padding: 16,
       }}
     >
-      {/* Card */}
       <div
         style={{
           background: WHITE,
@@ -66,7 +68,6 @@ const CompletePedagogProfileStepper = ({
           boxShadow: "0 24px 64px rgba(10,18,40,0.18)",
         }}
       >
-        {/* Header */}
         <div style={{ marginBottom: showSuccess ? 24 : 8 }}>
           <div
             style={{
@@ -106,10 +107,8 @@ const CompletePedagogProfileStepper = ({
           </h2>
         </div>
 
-        {/* Steps */}
         {!showSuccess && <StepIndicator current={step} />}
 
-        {/* Step content */}
         {showSuccess ? (
           <StepSuccess />
         ) : step === 0 ? (
@@ -119,6 +118,7 @@ const CompletePedagogProfileStepper = ({
             onBack={() => setStep(0)}
             onFinish={handleStepTwo}
             isLoading={isPending}
+            serverErrors={serverErrors}  // 👈
           />
         )}
       </div>
@@ -126,4 +126,4 @@ const CompletePedagogProfileStepper = ({
   );
 };
 
-export default CompletePedagogProfileStepper;
+export default CompletePedagogProfileStepper

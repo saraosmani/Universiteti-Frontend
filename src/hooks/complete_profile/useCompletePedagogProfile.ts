@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { selectToken, setUser, User } from "../../store/authSlice";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../../api/api";
 
 interface UseCompleteProfileOptions {
   onSuccess?: () => void;
-  onError?: (error: Error) => void;
+  onError?: (errors: Record<string, string[]>) => void;
 }
 
 export interface CompleteProfilePayload {
@@ -22,6 +22,11 @@ interface CompleteProfileResponse {
   data: {
     user: User;
   };
+}
+
+interface ValidationErrorResponse {
+  success: false;
+  errors: Record<string, string[]>;
 }
 
 const completePedagogProfileApi = async (
@@ -59,8 +64,9 @@ export const useCompletePedagogProfile = ({
       queryClient.invalidateQueries({ queryKey: ["profileStatus"] });
       onSuccess?.();
     },
-    onError: (error: Error) => {
-      onError?.(error);
+    onError: (error: AxiosError<ValidationErrorResponse>) => {
+      const errors = error.response?.data?.errors ?? {};
+      onError?.(errors);
     },
   });
 };

@@ -11,6 +11,7 @@ import CornerOrnament from "./components/CornerOrnament";
 import { ACCENT, LIGHT, MUTED, NAVY, NAVY2, WHITE } from "../../styles/common";
 import LoginForm from "./Login/Login";
 
+
 const tabs: { mode: AuthMode; label: string }[] = [
   { mode: "login",    label: "HYRJE"    },
   { mode: "register", label: "REGJISTRIM" },
