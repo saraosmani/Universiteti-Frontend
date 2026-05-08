@@ -11,15 +11,14 @@ import PrezencaPage from "./modules/prezenca/PrezencaPage";
 import NjoftimePage from "./modules/njoftime/NjoftimePage";
 import CileSimePage from "./modules/cilesime/CileSimePage";
 import CompleteProfileForm from "./modules/auth_pages/components/CompleteGoogleRegistration";
-import SeksionetPage from "./modules/Pedagog/SeksionetPage"; 
 import RegjistrimStudent from "./modules/regjistrim_student/RegjistrimStudent";
 import LibrezaNotave from "./modules/libreza_notave/LibrezaNotave";
 import DokumentPage from "./modules/dokumenta/DokumentPage";
 import ProfilePage from "./modules/profil/ProfilPage";
+import SeksionetPage from "./modules/seksion_pedagog/SectionsPage";
 
 function ProtectedRoute() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  return isAuthenticated ? <Outlet /> : <Navigate to="/auth" replace />;
   return isAuthenticated ? <Outlet /> : <Navigate to="/auth" replace />;
 }
 
