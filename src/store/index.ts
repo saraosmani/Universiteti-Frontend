@@ -6,7 +6,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
 });
 
-
+// ─── Persistence ──────────────────────────────────────────────────────────────
 const STORAGE_KEY = "universiteti_auth_state";
 
 const loadState = (): RootState | undefined => {
@@ -24,7 +24,7 @@ const saveState = (state: RootState) => {
     const serialized = JSON.stringify(state);
     localStorage.setItem(STORAGE_KEY, serialized);
   } catch {
-    
+    // ignore
   }
 };
 
