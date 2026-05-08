@@ -2,57 +2,10 @@ import React, { useMemo } from "react";
 import { useState } from "react";
 import Layout from "../dashboard/DashboardLayout";
 import { NAVY, WHITE } from "../../styles/common";
-import { useSeksionetAktive, Seksion } from "../../hooks/seksion/useSeksionetAktive";
-import { useSeksionetHistorik, SeksionHistorik } from "../../hooks/seksion/useSeksionetHistorik";
-
-const lojiBadgeColor: Record<string, { bg: string; color: string }> = {
-  Leksion:   { bg: "#EEF2FF", color: "#6366F1" },
-  Seminar:   { bg: "#ECFDF5", color: "#10B981" },
-  Laborator: { bg: "#FFF7ED", color: "#F97316" },
-};
-const getBadge = (lloji: string) => lojiBadgeColor[lloji] ?? { bg: "#F1F5F9", color: "#64748B" };
-
-const StatCard = ({ label, value }: { label: string; value: number | string }) => (
-  <div style={{ background: WHITE, borderRadius: 12, padding: "20px 24px", border: "1px solid #E8EDF5", display: "flex", flexDirection: "column", gap: 6 }}>
-    <span style={{ fontSize: 13, color: "#64748B", fontWeight: 500 }}>{label}</span>
-    <span style={{ fontSize: 28, fontWeight: 700, color: NAVY, lineHeight: 1 }}>{value}</span>
-  </div>
-);
-
-const Badge = ({ text }: { text: string }) => (
-  <span style={{ fontSize: 11, fontWeight: 600, background: "#F1F5F9", color: "#64748B", padding: "2px 8px", borderRadius: 6 }}>{text}</span>
-);
-
-const InfoRow = ({ icon, text }: { icon: string; text: string }) => (
-  <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "#475569" }}>
-    <span>{icon}</span><span>{text}</span>
-  </div>
-);
-
-const SectionCard = ({ s }: { s: Seksion }) => {
-  const badge = getBadge(s.lloji);
-  return (
-    <div style={{ background: WHITE, borderRadius: 14, padding: "20px 22px", border: "1px solid #E8EDF5", display: "flex", flexDirection: "column", gap: 10 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: 12, color: "#94A3B8", fontWeight: 600 }}>{s.lenda.kod}</span>
-        <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: badge.bg, color: badge.color }}>{s.lloji}</span>
-      </div>
-      <div style={{ fontSize: 16, fontWeight: 700, color: NAVY }}>{s.lenda.emer}</div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-        <InfoRow icon="📅" text={`${s.dita}, ${s.orari}`} />
-        <InfoRow icon="📍" text={`Salla ${s.salla.nr} · ${s.salla.godin}`} />
-        <InfoRow icon="🎓" text={`${s.program_studim.emer} (${s.program_studim.nive})`} />
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 10, borderTop: "1px solid #F1F5F9" }}>
-        <span style={{ fontSize: 13, color: "#64748B" }}>👥 <strong style={{ color: NAVY }}>{s.nr_studenteve}</strong> studentë</span>
-        <div style={{ display: "flex", gap: 6 }}>
-          <Badge text={`Gr. ${s.grupi}`} />
-          <Badge text={s.program_studim.nive} />
-        </div>
-      </div>
-    </div>
-  );
-};
+import { useSeksionetAktive } from "../../hooks/seksion/useSeksionetAktive";
+import { useSeksionetHistorik } from "../../hooks/seksion/useSeksionetHistorik";
+import StatCard from "./components/StatCard";
+import SectionCard from "./components/SectionCard";
 
 const SeksionetPage: React.FC = () => {
   const [tab, setTab] = useState<"aktive" | "historik">("aktive");
