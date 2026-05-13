@@ -1,17 +1,20 @@
 import React from 'react'
-import { Card, Typography, Alert} from 'antd'
-
+import { Card, Typography, Alert } from 'antd'
 import { useAppSelector } from '../../store/hooks'
 import { selectUser } from '../../store/authSlice'
 import Layout from '../dashboard/DashboardLayout'
 import StudentProfile from './components/ProfilStudent'
 import PedagogProfile from './components/ProfilPedagog'
 import { NAVY } from '../../styles/common'
+import { useCurrentUser } from '../../hooks/auth/useGetCurrentUser'
 
 const { Title } = Typography
 
 const ProfilePage = () => {
+  const { isLoading } = useCurrentUser()
   const user = useAppSelector(selectUser)
+
+  if (isLoading) return <Layout><div>Duke ngarkuar...</div></Layout>
 
   if (!user) {
     return <Alert type="error" message="Nuk jeni të kyçur" showIcon />
@@ -21,7 +24,11 @@ const ProfilePage = () => {
   const profileId = isStudent ? user.student?.stu_id : user.pedagog?.ped_id
 
   if (!profileId) {
-    return <Alert type="warning" message="Profili nuk u gjet" showIcon />
+    return (
+      <Layout>
+        <Alert type="warning" message="Profili nuk u gjet" showIcon />
+      </Layout>
+    )
   }
 
   return (
