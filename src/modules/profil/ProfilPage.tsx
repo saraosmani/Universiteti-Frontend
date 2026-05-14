@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Typography, Alert} from 'antd'
+import { Card, Typography, Alert } from 'antd'
 import { useAppSelector } from '../../store/hooks'
 import { selectUser } from '../../store/authSlice'
 import Layout from '../dashboard/DashboardLayout'
