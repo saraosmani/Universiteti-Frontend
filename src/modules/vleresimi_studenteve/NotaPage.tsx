@@ -107,7 +107,7 @@ const NotaPage = () => {
       render: (val: string) => <Tag color="blue">{val}</Tag>,
     },
     {
-      title: "Midterm /500",
+      title: "Midterm /400",
       key: "pik_midterm",
       render: (_: unknown, r: Student) => (
         <InputNumber
