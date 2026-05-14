@@ -1,20 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAppSelector } from "../../store/hooks";
-import { selectToken, User } from "../../store/authSlice";
-import axios from "axios";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { selectToken, setUser, User } from "../../store/authSlice";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../../api/api";
 
- 
 interface UseCompleteProfileOptions {
   onSuccess?: () => void;
-  onError?: (error: Error) => void;
+  onError?: (errors: Record<string, string[]>) => void;
 }
 
 export interface CompleteProfilePayload {
   dep_id: string;
   ped_tit: string;
   ped_gjin: "M" | "F";
-  ped_dl: string; 
+  ped_dl: string;
 }
 
 interface CompleteProfileResponse {
@@ -23,6 +22,11 @@ interface CompleteProfileResponse {
   data: {
     user: User;
   };
+}
+
+interface ValidationErrorResponse {
+  success: false;
+  errors: Record<string, string[]>;
 }
 
 const completePedagogProfileApi = async (
@@ -42,24 +46,27 @@ const completePedagogProfileApi = async (
   );
   return response.data;
 };
- 
+
 export const useCompletePedagogProfile = ({
   onSuccess,
   onError,
 }: UseCompleteProfileOptions = {}) => {
   const queryClient = useQueryClient();
   const token = useAppSelector(selectToken);
- 
+  const dispatch = useAppDispatch();
+
   return useMutation({
     mutationFn: (payload: CompleteProfilePayload) =>
       completePedagogProfileApi(payload, token!),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      dispatch(setUser({ user: data.data.user, token: token! }));
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
       queryClient.invalidateQueries({ queryKey: ["profileStatus"] });
       onSuccess?.();
     },
-    onError: (error: Error) => {
-      onError?.(error);
+    onError: (error: AxiosError<ValidationErrorResponse>) => {
+      const errors = error.response?.data?.errors ?? {};
+      onError?.(errors);
     },
   });
 };

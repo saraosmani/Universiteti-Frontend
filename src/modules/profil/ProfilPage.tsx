@@ -23,6 +23,9 @@ const ProfilePage = () => {
   const isStudent = user.role === 'student'
   const profileId = isStudent ? user.student?.stu_id : user.pedagog?.ped_id
 
+  console.log('user:', user)
+  console.log('profileId:', profileId)
+
   if (!profileId) {
     return (
       <Layout>
