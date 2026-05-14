@@ -7,7 +7,6 @@ import AuthPage from "./modules/auth_pages/AuthPage";
 import ProvimePage from "./modules/provime/ProvimePage";
 import OrariPage from "./modules/orari/OrariPage";
 import NotaPage from "./modules/vleresimi_studenteve/NotaPage";
-import PrezencaPage from "./modules/prezenca/PrezencaPage";
 import NjoftimePage from "./modules/njoftime/NjoftimePage";
 import CileSimePage from "./modules/cilesime/CileSimePage";
 import CompleteProfileForm from "./modules/auth_pages/components/CompleteGoogleRegistration";
@@ -49,7 +48,6 @@ export default function App() {
         <Route path="/orari" element={<OrariPage />} />
         <Route path="/provime" element={<ProvimePage />} />
         <Route path="/vleresimi" element={<NotaPage />} />
-        <Route path="/prezenca" element={<PrezencaPage />} />
         <Route path="/seksionet" element={<SeksionetPage />} /> 
         <Route path="/njoftime" element={<NjoftimePage />} />
         <Route path="/cilesimet" element={<CileSimePage />} />

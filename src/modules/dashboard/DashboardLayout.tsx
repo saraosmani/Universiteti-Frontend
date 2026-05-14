@@ -55,12 +55,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           label: "Orari",
           onClick: () => navigate("/orari"),
         },
-        {
-          key: "/prezenca",
-          icon: <CheckSquareOutlined />,
-          label: "Prezenca",
-          onClick: () => navigate("/prezenca"),
-        },
       ],
     },
     {
@@ -92,10 +86,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           onClick: () => navigate("/njoftime"),
         },
         {
-          key: "/cilesimet",
+          key: "/profili",
           icon: <SettingOutlined />,
           label: "Cilësimet e Llogarisë",
-          onClick: () => navigate("/cilesimet"),
+          onClick: () => navigate("/profili"),
         },
       ],
     },
