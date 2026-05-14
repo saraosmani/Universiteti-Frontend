@@ -61,5 +61,3 @@ const OrariPage: React.FC = () => {
 };
 
 export default OrariPage;
-
-export default OrariPage;
