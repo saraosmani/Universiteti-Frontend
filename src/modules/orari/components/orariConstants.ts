@@ -1,11 +1,19 @@
-export const DAYS = ["Hënë", "Martë", "Mërkurë", "Enjte", "Premte"];
+export const DAYS = ["Hene", "Marte", "Merkure", "Enjte", "Premte"];
+
+export const DAY_LABELS: Record<string, string> = {
+  Hene: "Hënë",
+  Marte: "Martë",
+  Merkure: "Mërkurë",
+  Enjte: "Enjte",
+  Premte: "Premte",
+};
 
 export const TIME_SLOTS: string[] = [];
 for (let h = 8; h <= 20; h++) {
   TIME_SLOTS.push(`${String(h).padStart(2, "0")}:00`);
 }
 
-export const SLOT_H = 64; 
+export const SLOT_H = 64;
 
 export const toMinutes = (t: string): number => {
   const [h, m] = t.split(":").map(Number);
@@ -20,10 +28,10 @@ export type LlojiColor = {
 };
 
 export const LLOJI_COLORS: Record<string, LlojiColor> = {
-  "Leksion": { antColor: "geekblue", bg: "#EEF2FF", border: "#6366F1", text: "#3730A3" },
-  "Laborator": { antColor: "orange",   bg: "#FFF7ED", border: "#F97316", text: "#C2410C" },
-  "Seminar":   { antColor: "purple",   bg: "#FDF4FF", border: "#A855F7", text: "#7E22CE" },
-  "default":   { antColor: "default",  bg: "#F8FAFC", border: "#94A3B8", text: "#475569" },
+  Leksion: { antColor: "geekblue", bg: "#EEF2FF", border: "#6366F1", text: "#3730A3" },
+  Laborator: { antColor: "orange", bg: "#FFF7ED", border: "#F97316", text: "#C2410C" },
+  Seminar: { antColor: "purple", bg: "#FDF4FF", border: "#A855F7", text: "#7E22CE" },
+  default: { antColor: "default", bg: "#F8FAFC", border: "#94A3B8", text: "#475569" },
 };
 
 export const getColor = (lloji: string): LlojiColor =>

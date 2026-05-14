@@ -1,7 +1,7 @@
 import React from "react";
 import { Card } from "antd";
 import { Seksion } from "../../../hooks/seksion/useSeksionetAktive";
-import { DAYS, TIME_SLOTS, SLOT_H, toMinutes } from "./orariConstants";
+import { DAYS, TIME_SLOTS, SLOT_H, toMinutes, DAY_LABELS } from "./orariConstants";
 import SectionBlock from "./SectionBlock";
 import { NAVY, WHITE } from "../../../styles/common";
 
@@ -36,7 +36,7 @@ const OrariTimetable: React.FC<Props> = ({ byDay }) => (
             borderRight: "1px solid #1e3a8a",
           }}
         >
-          {day}
+          {DAY_LABELS[day]}
         </div>
       ))}
 
