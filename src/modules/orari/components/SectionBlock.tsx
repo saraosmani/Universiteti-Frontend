@@ -14,12 +14,13 @@ const { Text } = Typography;
 
 interface Props {
   s: Seksion;
+  heightPx?: number;
 }
 
-const SectionBlock: React.FC<Props> = ({ s }) => {
+const SectionBlock: React.FC<Props> = ({ s, heightPx }) => {
   const c = getColor(s.lloji);
   const durationH = (toMinutes(s.ore_mbarimi) - toMinutes(s.ore_fillimi)) / 60;
-  const height = Math.max(durationH * SLOT_H - 8, 44);
+  const height = heightPx ?? Math.max(durationH * SLOT_H - 8, 44);
 
   const tooltipContent = (
     <Space direction="vertical" size={2} style={{ fontSize: 12 }}>
