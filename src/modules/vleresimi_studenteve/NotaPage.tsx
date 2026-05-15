@@ -1,282 +1,434 @@
-import { useState } from "react";
-import {
-  Typography,
-  Select,
-  Table,
-  InputNumber,
-  Button,
-  Tag,
-  Card,
-  Row,
-  Col,
-  Spin,
-  message,
-} from "antd";
-import { SaveOutlined } from "@ant-design/icons";
+import React, { useState, useMemo } from "react";
+import { Spin } from "antd";
 import Layout from "../dashboard/DashboardLayout";
-import { useGetLendet } from "../../hooks/vleresim/useGetLendet";
-import { useGetSemestre } from "../../hooks/vleresim/useGetSemestre";
-import { useGetStudents } from "../../hooks/vleresim/useGetStudents";
-import { useUpdateVleresim } from "../../hooks/vleresim/useUpdateVleresim";
-import { NAVY, MUTED } from "../../styles/common";
+import { useGetProvime, Provim } from "../../hooks/provime/useGetProvime";
+import {
+ NAVY,
+ NAVY2,
+ ACCENT,
+ BORDER,
+ WHITE,
+ LIGHT,
+ MUTED,
+} from "../../styles/common";
 
-const { Title, Text } = Typography;
+const GREEN = "#059669";
+const AMBER = "#d97706";
+const PURPLE = "#7c3aed";
+const RED = "#dc2626";
 
-type Vleresim = {
-  pik_midterm: number | null;
-  pik_final: number | null;
-  pik_detyra: number | null;
+const TYPE_CONFIG: Record<
+ string,
+ { color: string; bg: string; border: string; label: string }
+> = {
+ Midterm: { color: AMBER, bg: "#fffbeb", border: "#fde68a", label: "Midterm" },
+ Final: { color: RED, bg: "#fef2f2", border: "#fecaca", label: "Final" },
+ default: { color: PURPLE, bg: "#f5f3ff", border: "#ddd6fe", label: "Provim" },
 };
 
-type Student = {
-  regj_id: number;
-  stu_id: string;
-  stu_mb: string;
-  stu_em: string;
-  sek_grupi: string;
-  regj_status: string;
-  pik_midterm: number | null;
-  pik_final: number | null;
-  pik_detyra: number | null;
+const typeConfig = (lloji: string) => TYPE_CONFIG[lloji] ?? TYPE_CONFIG.default;
+
+const MONTHS_AL = [
+ "Janar",
+ "Shkurt",
+ "Mars",
+ "Prill",
+ "Maj",
+ "Qershor",
+ "Korrik",
+ "Gusht",
+ "Shtator",
+ "Tetor",
+ "Nëntor",
+ "Dhjetor",
+];
+const DAYS_AL = [
+ "E Diel",
+ "E Hënë",
+ "E Martë",
+ "E Mërkurë",
+ "E Enjte",
+ "E Premte",
+ "E Shtunë",
+];
+
+function formatDateAl(dateStr: string) {
+ const d = new Date(dateStr + "T00:00:00");
+ return `${DAYS_AL[d.getDay()]}, ${d.getDate()} ${MONTHS_AL[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function daysUntil(dateStr: string): number {
+ const today = new Date();
+ today.setHours(0, 0, 0, 0);
+ const target = new Date(dateStr + "T00:00:00");
+ return Math.round((target.getTime() - today.getTime()) / 86400000);
+}
+
+const CountdownBadge: React.FC<{ days: number }> = ({ days }) => {
+ if (days < 0)
+ return (
+ <span style={{ fontSize: 11, color: MUTED, fontStyle: "italic" }}>
+ Përfunduar
+ </span>
+ );
+ if (days === 0)
+ return (
+ <span
+ style={{
+ fontSize: 11,
+ fontWeight: 700,
+ color: RED,
+ background: "#fef2f2",
+ padding: "2px 8px",
+ borderRadius: 20,
+ border: '1px solid #fecaca',
+ }}
+ >
+ Sot 🔥
+ </span>
+ );
+ if (days <= 7)
+ return (
+ <span
+ style={{
+ fontSize: 11,
+ fontWeight: 700,
+ color: AMBER,
+ background: "#fffbeb",
+ padding: "2px 8px",
+ borderRadius: 20,
+ border: '1px solid #fde68a',
+ }}
+ >
+ {days} ditë
+ </span>
+ );
+ return (
+ <span
+ style={{
+ fontSize: 11,
+ fontWeight: 600,
+ color: ACCENT,
+ background: LIGHT,
+ padding: "2px 8px",
+ borderRadius: 20,
+ border: `1px solid ${BORDER}`,
+ }}
+ >
+ {days} ditë
+ </span>
+ );
 };
 
-const NotaPage = () => {
-  const [selectedLend, setSelectedLend] = useState<number | null>(null);
-  const [selectedSem, setSelectedSem] = useState<number | null>(null);
-  const [editedValues, setEditedValues] = useState<Record<number, Vleresim>>({});
+const SUBJECT_COLORS = [ACCENT, GREEN, PURPLE, RED, AMBER, "#0891b2"];
+const subjectColor = (index: number) =>
+ SUBJECT_COLORS[index % SUBJECT_COLORS.length];
 
-  const { data: lendet, isLoading: loadingLendet } = useGetLendet();
-  const { data: semestre, isLoading: loadingSemestre } = useGetSemestre(selectedLend);
-  const { data: students, isLoading: loadingStudents } = useGetStudents(selectedLend, selectedSem);
-  const { mutate: updateVleresim, isPending } = useUpdateVleresim();
+const ProvimCard: React.FC<{ provim: Provim; index: number }> = ({
+ provim,
+ index,
+}) => {
+ const cfg = typeConfig(provim.lloji);
+ const days = daysUntil(provim.data);
+ const isPast = days < 0;
+ const color = subjectColor(index);
 
-  const handlePikChange = (
-    regjId: number,
-    field: "pik_midterm" | "pik_final" | "pik_detyra",
-    value: number | null
-  ) => {
-    setEditedValues((prev: Record<number, Vleresim>) => ({
-      ...prev,
-      [regjId]: {
-        ...prev[regjId],
-        [field]: value,
-      },
-    }));
-  };
+ return (
+ <div
+ style={{
+ background: WHITE,
+ border: `1px solid ${isPast ? BORDER : BORDER}`,
+ borderRadius: 14,
+ padding: "20px 22px",
+ display: "flex",
+ flexDirection: "column",
+ gap: 14,
+ opacity: isPast ? 0.65 : 1,
+ transition: "box-shadow 0.18s",
+ boxShadow: isPast ? "none" : "0 2px 8px rgba(15,37,87,0.07)",
+ position: "relative",
+ overflow: "hidden",
+ }}
+ >
+ {/* color strip top */}
+ <div
+ style={{
+ position: "absolute",
+ top: 0,
+ left: 0,
+ right: 0,
+ height: 3,
+ background: isPast ? BORDER : color,
+ borderRadius: "14px 14px 0 0",
+ }}
+ />
 
-  const handleSaveAll = () => {
-    const entries = Object.entries(editedValues);
-    if (entries.length === 0) return;
-    entries.forEach(([regjId, data]) => {
-      updateVleresim(
-        { regjId: Number(regjId), data },
-        {
-          onSuccess: () => message.success("Notat u ruajtën me sukses!"),
-          onError: () => message.error("Gabim gjatë ruajtjes!"),
-        }
-      );
-    });
-  };
+ {/* header row */}
+ {/* header row — icon + name + badge stacked */}
+ <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+ <div
+ style={{
+ width: 40,
+ height: 40,
+ borderRadius: 10,
+ flexShrink: 0,
+ background: `${color}18`,
+ border: `1px solid ${color}33`,
+ display: "flex",
+ alignItems: "center",
+ justifyContent: "center",
+ fontSize: 13,
+ fontWeight: 700,
+ color,
+ }}
+ >
+ {provim.lenda.kod.slice(0, 3)}
+ </div>
+ <div style={{ minWidth: 0, flex: 1 }}>
+ <p
+ style={{
+ fontWeight: 700,
+ fontSize: 14,
+ color: NAVY,
+ margin: "0 0 4px",
+ whiteSpace: "nowrap",
+ overflow: "hidden",
+ textOverflow: "ellipsis",
+ }}
+ >
+ {provim.lenda.emer}
+ </p>
+ {/* code + badge on the same line, below the name */}
+ <div
+ style={{
+ display: "flex",
+ alignItems: "center",
+ gap: 6,
+ flexWrap: "wrap",
+ }}
+ >
+ <code
+ style={{
+ fontSize: 11,
+ color: MUTED,
+ background: LIGHT,
+ padding: "1px 6px",
+ borderRadius: 6,
+ border: `1px solid ${BORDER}`,
+ }}
+ >
+ {provim.lenda.kod}
+ </code>
+ <span
+ style={{
+ fontSize: 11,
+ fontWeight: 700,
+ color: cfg.color,
+ background: cfg.bg,
+ border: `1px solid ${cfg.border}`,
+ padding: "2px 9px",
+ borderRadius: 20,
+ }}
+ >
+ {cfg.label}
+ </span>
+ </div>
+ </div>
+ </div>
+ {/* divider */}
+ <div style={{ borderTop: `1px solid ${BORDER}` }} />
 
-  const statusColor = (status: string) => {
-    if (status === "Kalon") return "green";
-    if (status === "Mungon") return "orange";
-    return "red";
-  };
+ {/* date / time / room row */}
+ <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+ <InfoItem icon="📅" label="Data" value={formatDateAl(provim.data)} />
+ <InfoItem icon="🕐" label="Ora" value={provim.ora.slice(0, 5)} />
+ <InfoItem
+ icon="📍"
+ label="Salla"
+ value={`${provim.salla.nr}${provim.salla.godin ? ` · ${provim.salla.godin}` : ""}`}
+ />
+ {provim.semestri && (
+ <InfoItem
+ icon="📚"
+ label="Semestri"
+ value={`Sem. ${provim.semestri.nr} · ${provim.semestri.vit}`}
+ />
+ )}
+ </div>
 
-  const columns = [
-    {
-      title: "Studenti",
-      key: "emri",
-      render: (_: unknown, r: Student) => (
-        <Text style={{ color: NAVY, fontWeight: 600 }}>
-          {r.stu_mb} {r.stu_em}
-        </Text>
-      ),
-    },
-    {
-      title: "ID",
-      dataIndex: "stu_id",
-      key: "stu_id",
-      render: (val: string) => <Text style={{ color: MUTED }}>{val}</Text>,
-    },
-    {
-      title: "Grup",
-      dataIndex: "sek_grupi",
-      key: "sek_grupi",
-      render: (val: string) => <Tag color="blue">{val}</Tag>,
-    },
-    {
-      title: "Midterm /400",
-      key: "pik_midterm",
-      render: (_: unknown, r: Student) => (
-        <InputNumber
-          min={0}
-          max={500}
-          value={editedValues[r.regj_id]?.pik_midterm ?? r.pik_midterm}
-          onChange={(val) => handlePikChange(r.regj_id, "pik_midterm", val)}
-          style={{ width: 90 }}
-        />
-      ),
-    },
-    {
-      title: "Final /500",
-      key: "pik_final",
-      render: (_: unknown, r: Student) => (
-        <InputNumber
-          min={0}
-          max={500}
-          value={editedValues[r.regj_id]?.pik_final ?? r.pik_final}
-          onChange={(val) => handlePikChange(r.regj_id, "pik_final", val)}
-          style={{ width: 90 }}
-        />
-      ),
-    },
-    {
-      title: "Detyrë /100",
-      key: "pik_detyra",
-      render: (_: unknown, r: Student) => (
-        <InputNumber
-          min={0}
-          max={100}
-          value={editedValues[r.regj_id]?.pik_detyra ?? r.pik_detyra}
-          onChange={(val) => handlePikChange(r.regj_id, "pik_detyra", val)}
-          style={{ width: 90 }}
-        />
-      ),
-    },
-    {
-      title: "Total",
-      key: "total",
-      render: (_: unknown, r: Student) => {
-        const m = editedValues[r.regj_id]?.pik_midterm ?? r.pik_midterm ?? 0;
-        const f = editedValues[r.regj_id]?.pik_final ?? r.pik_final ?? 0;
-        const d = editedValues[r.regj_id]?.pik_detyra ?? r.pik_detyra ?? 0;
-        return <Text strong>{Number(m) + Number(f) + Number(d)}</Text>;
-      },
-    },
-    {
-      title: "Statusi",
-      dataIndex: "regj_status",
-      key: "regj_status",
-      render: (val: string) => (
-        <Tag color={statusColor(val)} style={{ borderRadius: 20, padding: "2px 12px" }}>
-          {val}
-        </Tag>
-      ),
-    },
-  ];
-
-  return (
-    <Layout>
-      <div style={{ padding: "32px" }}>
-        <Title level={4} style={{ color: NAVY, marginBottom: 24 }}>
-          Vlerësimi i Studentëve
-        </Title>
-
-        <Card
-          bordered={false}
-          style={{ borderRadius: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.08)", marginBottom: 24 }}
-        >
-          <Row gutter={16} align="bottom">
-            <Col>
-              <Text style={{ display: "block", marginBottom: 6, color: NAVY, fontWeight: 600 }}>
-                Lënda
-              </Text>
-              <Select
-                placeholder="Zgjedh Lëndën"
-                loading={loadingLendet}
-                style={{ width: 260 }}
-                onChange={(val) => {
-                  setSelectedLend(val);
-                  setSelectedSem(null);
-                }}
-                value={selectedLend}
-                allowClear
-              >
-                {lendet?.map((l) => (
-                  <Select.Option key={l.lend_id} value={l.lend_id}>
-                    {l.lend_emer} ({l.lend_kod})
-                  </Select.Option>
-                ))}
-              </Select>
-            </Col>
-
-            <Col>
-              <Text style={{ display: "block", marginBottom: 6, color: NAVY, fontWeight: 600 }}>
-                Semestri
-              </Text>
-              <Select
-                placeholder="Zgjedh Semestrin"
-                loading={loadingSemestre}
-                style={{ width: 260 }}
-                onChange={(val) => setSelectedSem(val)}
-                value={selectedSem}
-                disabled={!selectedLend}
-                allowClear
-              >
-                {semestre?.map((s) => (
-                  <Select.Option key={s.sem_id} value={s.sem_id}>
-                    {s.vit_emer} — Semestri {s.sem_nr}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Col>
-          </Row>
-        </Card>
-
-        {loadingStudents ? (
-          <div style={{ textAlign: "center", marginTop: 48 }}>
-            <Spin size="large" />
-          </div>
-        ) : (
-          <>
-            <Table<Student>
-              dataSource={students ?? []}
-              columns={columns}
-              rowKey="regj_id"
-              bordered
-              pagination={false}
-              style={{ borderRadius: 12, overflow: "hidden" }}
-              locale={{
-                emptyText:
-                  selectedLend && selectedSem
-                    ? "Nuk u gjetën studentë."
-                    : "Zgjedh lëndën dhe semestrin.",
-              }}
-            />
-
-            {students && students.length > 0 && (
-              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
-                <Button
-                  type="primary"
-                  icon={<SaveOutlined />}
-                  onClick={handleSaveAll}
-                  loading={isPending}
-                  disabled={Object.keys(editedValues).length === 0}
-                  style={{
-                    background:
-                      Object.keys(editedValues).length === 0 ? "#b0b8c9" : NAVY,
-                    border: "none",
-                    borderRadius: 8,
-                    height: 40,
-                    paddingInline: 24,
-                    opacity: Object.keys(editedValues).length === 0 ? 0.6 : 1,
-                    cursor:
-                      Object.keys(editedValues).length === 0
-                        ? "not-allowed"
-                        : "pointer",
-                  }}
-                >
-                  Ruaj të gjitha notat
-                </Button>
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </Layout>
-  );
+ {/* footer */}
+ <div style={{ display: "flex", justifyContent: "flex-end" }}>
+ <CountdownBadge days={days} />
+ </div>
+ </div>
+ );
 };
 
-export default NotaPage;
+const InfoItem: React.FC<{ icon: string; label: string; value: string }> = ({
+ icon,
+ label,
+ value,
+}) => (
+ <div>
+ <p
+ style={{
+ fontSize: 10,
+ color: MUTED,
+ margin: "0 0 2px",
+ textTransform: "uppercase",
+ letterSpacing: 0.8,
+ fontWeight: 600,
+ }}
+ >
+ {icon} {label}
+ </p>
+ <p style={{ fontSize: 13, fontWeight: 600, color: NAVY, margin: 0 }}>
+ {value}
+ </p>
+ </div>
+);
+
+type Filter = "all" | "upcoming" | "past" | string;
+
+const ProvimePage = () => {
+ const { data: provime = [], isLoading } = useGetProvime();
+ const [filter, setFilter] = useState<Filter>("upcoming");
+
+ const types = useMemo(
+ () => Array.from(new Set(provime.map((p) => p.lloji))),
+ [provime],
+ );
+
+ const filtered = useMemo(() => {
+ const today = new Date();
+ today.setHours(0, 0, 0, 0);
+ let list = [...provime].sort((a, b) => a.data.localeCompare(b.data));
+ if (filter === "upcoming")
+ list = list.filter((p) => daysUntil(p.data) >= 0);
+ else if (filter === "past")
+ list = list.filter((p) => daysUntil(p.data) < 0);
+ else if (filter !== "all") list = list.filter((p) => p.lloji === filter);
+ return list;
+ }, [provime, filter]);
+
+ const upcoming = provime.filter((p) => daysUntil(p.data) >= 0);
+ const nextExam = upcoming.sort((a, b) => a.data.localeCompare(b.data))[0];
+ const nextDays = nextExam ? daysUntil(nextExam.data) : null;
+
+ const FilterBtn: React.FC<{
+ value: Filter;
+ label: string;
+ count?: number;
+ }> = ({ value, label, count }) => (
+ <button
+ onClick={() => setFilter(value)}
+ style={{
+ padding: "7px 16px",
+ borderRadius: 20,
+ cursor: "pointer",
+ fontSize: 13,
+ fontWeight: 600,
+ border: filter === value ? `1.5px solid ${ACCENT}` : `1px solid ${BORDER}`,
+ background: filter === value ? ACCENT : WHITE,
+ color: filter === value ? WHITE : NAVY,
+ display: "flex",
+ alignItems: "center",
+ gap: 6,
+ transition: "all 0.15s",
+ }}
+ >
+ {label}
+ {count !== undefined && (
+ <span
+ style={{
+ background: filter === value ? "rgba(255,255,255,0.25)" : LIGHT,
+ color: filter === value ? WHITE : MUTED,
+ fontSize: 11,
+ fontWeight: 700,
+ padding: "0 6px",
+ borderRadius: 10,
+ lineHeight: "18px",
+ }}
+ >
+ {count}
+ </span>
+ )}
+ </button>
+ );
+
+ return (
+ <Layout>
+ {/* ── Hero banner ── */}
+ <div
+ style={{
+ background: `linear-gradient(130deg, ${NAVY} 0%, ${NAVY2} 45%, #2346a0 100%)`,
+ borderRadius: 14,
+ padding: "22px 28px",
+ color: WHITE,
+ display: "flex",
+ justifyContent: "space-between",
+ alignItems: "center",
+ boxShadow: "0 4px 14px rgba(15,37,87,0.18)",
+ position: "relative",
+ overflow: "hidden",
+ marginBottom: 24,
+ }}
+ >
+ <div
+ style={{
+ position: "absolute",
+ width: 180,
+ height: 180,
+ borderRadius: "50%",
+ background: "rgba(255,255,255,0.05)",
+ right: -30,
+ top: -60,
+ }}
+ />
+ <div style={{ position: "relative", zIndex: 1 }}>
+ <p
+ style={{
+ fontSize: 11,
+ opacity: 0.7,
+ margin: "0 0 4px",
+ textTransform: "uppercase",
+ letterSpacing: 1.2,
+ }}
+ >
+ Orari i Provimeve
+ </p>
+ <h2
+ style={{
+ fontSize: 22,
+ fontWeight: 700,
+ margin: "0 0 4px",
+ color: WHITE,
+ }}
+ >
+ {upcoming.length > 0
+ ? `${upcoming.length} provime të ardhshme`
+ : "Nuk ka provime të ardhshme"}
+ </h2>
+ <p style={{ fontSize: 12, opacity: 0.7, margin: 0 }}>
+ {nextExam
+ ? `Provimi i ardhshëm: ${nextExam.lenda.emer} — ${formatDateAl(nextExam.data)}`
+ : "Të gjitha provimet kanë përfunduar"}
+ </p>
+ </div>
+ <div
+ style={{ display: "flex", gap: 32, position: "relative", zIndex: 1 }}
+ >
+ {[
+ [provime.length, "Gjithsej"],
+ [upcoming.length, "Të ardhshme"],
+ [
+ nextDays !== null
+ ? nextDays === 0
+ ? "Sot"
+ : `${nextDays}d`
+ : "—",
+ "Pas ditësh",
+ ],
+ ].map(([v, l]) => (
+ <div key={String(l)}
+
