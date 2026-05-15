@@ -11,8 +11,9 @@ import {
   Col,
   Spin,
   message,
+  Tooltip,
 } from "antd";
-import { SaveOutlined } from "@ant-design/icons";
+import { SaveOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import Layout from "../dashboard/DashboardLayout";
 import { useGetLendet } from "../../hooks/vleresim/useGetLendet";
 import { useGetSemestre } from "../../hooks/vleresim/useGetSemestre";
@@ -44,11 +45,13 @@ const NotaPage = () => {
   const [selectedLend, setSelectedLend] = useState<number | null>(null);
   const [selectedSem, setSelectedSem] = useState<number | null>(null);
   const [editedValues, setEditedValues] = useState<Record<number, Vleresim>>({});
+  const [savingRows, setSavingRows] = useState<Set<number>>(new Set());
+  const [savedRows, setSavedRows] = useState<Set<number>>(new Set());
 
   const { data: lendet, isLoading: loadingLendet } = useGetLendet();
   const { data: semestre, isLoading: loadingSemestre } = useGetSemestre(selectedLend);
   const { data: students, isLoading: loadingStudents } = useGetStudents(selectedLend, selectedSem);
-  const { mutate: updateVleresim, isPending } = useUpdateVleresim();
+  const { mutate: updateVleresim } = useUpdateVleresim();
 
   const handlePikChange = (
     regjId: number,
@@ -64,18 +67,32 @@ const NotaPage = () => {
     }));
   };
 
-  const handleSaveAll = () => {
-    const entries = Object.entries(editedValues);
-    if (entries.length === 0) return;
-    entries.forEach(([regjId, data]) => {
-      updateVleresim(
-        { regjId: Number(regjId), data },
-        {
-          onSuccess: () => message.success("Notat u ruajtën me sukses!"),
-          onError: () => message.error("Gabim gjatë ruajtjes!"),
-        }
-      );
-    });
+  const handleSaveRow = (r: Student) => {
+    const edited = editedValues[r.regj_id];
+    const toInt = (v: number | null | undefined): number | null =>
+      v === null || v === undefined ? null : Math.round(Number(v));
+    const data: Vleresim = {
+      pik_midterm: toInt(edited?.pik_midterm ?? r.pik_midterm),
+      pik_final:   toInt(edited?.pik_final   ?? r.pik_final),
+      pik_detyra:  toInt(edited?.pik_detyra  ?? r.pik_detyra),
+    };
+    setSavingRows((prev) => new Set([...prev, r.regj_id]));
+    setSavedRows((prev) => { const s = new Set(prev); s.delete(r.regj_id); return s; });
+    updateVleresim(
+      { regjId: r.regj_id, data },
+      {
+        onSuccess: () => {
+          message.success(`Notat e ${r.stu_mb} ${r.stu_em} u ruajtën!`);
+          setSavedRows((prev) => new Set([...prev, r.regj_id]));
+          setSavingRows((prev) => { const s = new Set(prev); s.delete(r.regj_id); return s; });
+          setEditedValues((prev) => { const next = { ...prev }; delete next[r.regj_id]; return next; });
+        },
+        onError: () => {
+          message.error("Gabim gjatë ruajtjes!");
+          setSavingRows((prev) => { const s = new Set(prev); s.delete(r.regj_id); return s; });
+        },
+      }
+    );
   };
 
   const statusColor = (status: string) => {
@@ -113,6 +130,7 @@ const NotaPage = () => {
         <InputNumber
           min={0}
           max={500}
+          precision={0}
           value={editedValues[r.regj_id]?.pik_midterm ?? r.pik_midterm}
           onChange={(val) => handlePikChange(r.regj_id, "pik_midterm", val)}
           style={{ width: 90 }}
@@ -126,6 +144,7 @@ const NotaPage = () => {
         <InputNumber
           min={0}
           max={500}
+          precision={0}
           value={editedValues[r.regj_id]?.pik_final ?? r.pik_final}
           onChange={(val) => handlePikChange(r.regj_id, "pik_final", val)}
           style={{ width: 90 }}
@@ -139,6 +158,7 @@ const NotaPage = () => {
         <InputNumber
           min={0}
           max={100}
+          precision={0}
           value={editedValues[r.regj_id]?.pik_detyra ?? r.pik_detyra}
           onChange={(val) => handlePikChange(r.regj_id, "pik_detyra", val)}
           style={{ width: 90 }}
@@ -164,6 +184,41 @@ const NotaPage = () => {
           {val}
         </Tag>
       ),
+    },
+    {
+      title: "",
+      key: "actions",
+      width: 110,
+      render: (_: unknown, r: Student) => {
+        const isDirty  = !!editedValues[r.regj_id];
+        const isSaving = savingRows.has(r.regj_id);
+        const isSaved  = savedRows.has(r.regj_id) && !isDirty;
+        return (
+          <Tooltip title={isSaved ? "Ruajtur" : isDirty ? "Ruaj rreshtin" : "Nuk ka ndryshime"}>
+            <Button
+              type={isDirty ? "primary" : "default"}
+              icon={
+                isSaved
+                  ? <CheckCircleOutlined />
+                  : <SaveOutlined />
+              }
+              loading={isSaving}
+              disabled={!isDirty || isSaving}
+              onClick={() => handleSaveRow(r)}
+              style={{
+                borderRadius: 8,
+                fontSize: 12,
+                fontWeight: 600,
+                background: isSaved ? "#f0fdf4" : isDirty ? NAVY : undefined,
+                borderColor: isSaved ? "#059669" : undefined,
+                color: isSaved ? "#059669" : undefined,
+              }}
+            >
+              {isSaved ? "Ruajtur" : "Ruaj"}
+            </Button>
+          </Tooltip>
+        );
+      },
     },
   ];
 
@@ -247,25 +302,29 @@ const NotaPage = () => {
             />
 
             {students && students.length > 0 && (
-              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                {Object.keys(editedValues).length > 0 ? (
+                  <Tag color="orange" style={{ borderRadius: 8, padding: "4px 12px", fontSize: 12 }}>
+                    {Object.keys(editedValues).length} rresht me ndryshime të paruajtura
+                  </Tag>
+                ) : (
+                  <span />
+                )}
                 <Button
                   type="primary"
                   icon={<SaveOutlined />}
-                  onClick={handleSaveAll}
-                  loading={isPending}
                   disabled={Object.keys(editedValues).length === 0}
+                  onClick={() => {
+                    students
+                      .filter((r) => !!editedValues[r.regj_id])
+                      .forEach((r) => handleSaveRow(r));
+                  }}
                   style={{
-                    background:
-                      Object.keys(editedValues).length === 0 ? "#b0b8c9" : NAVY,
+                    background: Object.keys(editedValues).length === 0 ? undefined : NAVY,
                     border: "none",
                     borderRadius: 8,
                     height: 40,
                     paddingInline: 24,
-                    opacity: Object.keys(editedValues).length === 0 ? 0.6 : 1,
-                    cursor:
-                      Object.keys(editedValues).length === 0
-                        ? "not-allowed"
-                        : "pointer",
                   }}
                 >
                   Ruaj të gjitha notat
