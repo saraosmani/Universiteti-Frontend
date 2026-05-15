@@ -17,6 +17,20 @@ const DAY_LABEL_MAP: Record<string, string> = {
   "E Premte":  "P",
   "E Shtunë":  "Sh",
   "E Diel":    "D",
+  "Hene":      "H",
+  "Marte":     "Ma",
+  "Merkure":   "Me",
+  "Enjte":     "E",
+  "Premte":    "P",
+  "Shtune":    "Sh",
+  "Diel":      "D",
+  "hene":      "H",
+  "marte":     "Ma",
+  "merkure":   "Me",
+  "enjte":     "E",
+  "premte":    "P",
+  "shtune":    "Sh",
+  "diel":      "D",
 };
 
 const DAY_ORDER = ["H", "Ma", "Me", "E", "P", "Sh", "D"];
@@ -31,7 +45,7 @@ export function computeHourData(
 ): BarDatum[] {
   const totals: Record<string, number> = {};
   for (const s of seksionet) {
-    const label = DAY_LABEL_MAP[s.dita];
+    const label = DAY_LABEL_MAP[s.dita] ?? DAY_LABEL_MAP[s.dita?.toLowerCase()];
     if (!label) continue;
     const duration = toDecimalHours(s.ore_mbarimi) - toDecimalHours(s.ore_fillimi);
     totals[label] = (totals[label] ?? 0) + Math.max(0, duration);
