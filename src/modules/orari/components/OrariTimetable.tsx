@@ -1,122 +1,122 @@
-importo React nga "react" ;
- importo { Kartë } nga "antd" ;
- importoni { Seksion } nga "../../../hooks/seksion/useSeksionetAktive" ;
- importo { DITË , KOHË_SLOTS , SLOT_H , nëMinute , ETIKETA_DITESH } nga "./orariConstants" ;
- importo SectionBlock nga "./SectionBlock" ;
- importo { NGJYRË MARINE , E BARDHË } nga "../../../styles/common" ;
+import React from "react";
+import { Card } from "antd";
+import { Seksion } from "../../../hooks/seksion/useSeksionetAktive";
+import { DAYS, TIME_SLOTS, SLOT_H, toMinutes, DAY_LABELS } from "./orariConstants";
+import SectionBlock from "./SectionBlock";
+import { NAVY, WHITE } from "../../../styles/common";
 
- Props-i i ndërfaqes {
- byDay : Record < string , Seksion []>;
- }
+interface Props {
+  byDay: Record<string, Seksion[]>;
+}
 
- const GRID_START = toMinutes ( TIME_SLOTS [ 0 ]); // p.sh. 08:00 = 480 min
- const TOTAL_H = TIME_SLOTS.length * SLOT_H ;
+const GRID_START = toMinutes(TIME_SLOTS[0]); // e.g. 08:00 = 480 min
+const TOTAL_H = TIME_SLOTS.length * SLOT_H;
 
- const OrariTimetable : React.FC <Props> = ({ byDay }) => (
- < Kartë
- bodyStyle = { { mbushje : 0 , tejmbushje : "automatik" } }
- stili = { { borderRadius :}} 14 , kufiri : "1px i ngurtë #E2E8F0" } }
- >
- < div
- stili = { {
-        shfaqje : "rrjet" ,
-        gridTemplateColumns : `56px përsëritje( ${ DAYS . gjatësi } , 1fr)` ,
-        Gjerësia minimale : 700 ,
- } }
- >
- { /* Rreshti i kokës */ }
- < div style = { { sfond : NGJYRË MARINE , mbushje : "12px 8px" , borderDjathtas : "1px i ngurtë #1e3a8a" } } />
- { DITË . hartë ( ( ditë ) => (
-        < div
-          çelësi = { ditë }
-          stili = { {
-            sfond : MARINA ,
-            ngjyra : E BARDHË ,
-            mbushje : " 12px 10px"
-            Rreshtimi i tekstit : "qendër" ,
-            Pesha e fontit : 700 ,
-            Madhësia e fontit : 13 ,
-            kufiri i djathtë : "1px i ngurtë #1e3a8a" ,
- } }
+const OrariTimetable: React.FC<Props> = ({ byDay }) => (
+  <Card
+    bodyStyle={{ padding: 0, overflow: "auto" }}
+    style={{ borderRadius: 14, border: "1px solid #E2E8F0" }}
+  >
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: `56px repeat(${DAYS.length}, 1fr)`,
+        minWidth: 700,
+      }}
+    >
+      {/* Header row */}
+      <div style={{ background: NAVY, padding: "12px 8px", borderRight: "1px solid #1e3a8a" }} />
+      {DAYS.map((day) => (
+        <div
+          key={day}
+          style={{
+            background: NAVY,
+            color: WHITE,
+            padding: "12px 10px",
+            textAlign: "center",
+            fontWeight: 700,
+            fontSize: 13,
+            borderRight: "1px solid #1e3a8a",
+          }}
         >
-          { DAY_LABELS [ ditë ] }
-        </div>​​
- )) }
+          {DAY_LABELS[day]}
+        </div>
+      ))}
 
- { /* Kolona e etiketës së kohës */ }
- < div style = { { sfond : "#F8FAFC" , borderRight : "1px i ngurtë #E2E8F0" } } >
- { TIME_SLOTS . hartë ( ( vend , idx ) => (
-          < div
-            çelësi = { vend i caktuar }
-            stili = { {
-              lartësia : SLOT_H ,
-              mbushje : "8px 6px 0" ,
-              shfaqje : "përkulje" ,
-              rreshto artikujt : "fillim fleksibël" ,
-              Madhësia e fontit : 11 ,
-              ngjyra : "# 94A3B8 "
-              Pesha e fontit : 600 ,
-              kufiri Fundi : idx === TIME_SLOTS . gjatësia - 1 ? "asnjë" : "1px solid #F1F5F9" ,
-              Madhësia e kutisë : "kuti kufitare" ,
- } }
+      {/* Time-label column */}
+      <div style={{ background: "#F8FAFC", borderRight: "1px solid #E2E8F0" }}>
+        {TIME_SLOTS.map((slot, idx) => (
+          <div
+            key={slot}
+            style={{
+              height: SLOT_H,
+              padding: "8px 6px 0",
+              display: "flex",
+              alignItems: "flex-start",
+              fontSize: 11,
+              color: "#94A3B8",
+              fontWeight: 600,
+              borderBottom: idx === TIME_SLOTS.length - 1 ? "none" : "1px solid #F1F5F9",
+              boxSizing: "border-box",
+            }}
           >
-            { vend i caktuar }
-          </div>​​
- )) }
- </div>​​
+            {slot}
+          </div>
+        ))}
+      </div>
 
- { /* Kolonat e ditës — blloqe të pozicionuara absolutisht */ }
- { DITË . hartë ( ( ditë ) => (
-        < div
-          çelësi = { ditë }
-          stili = { {
-            pozicioni : "i afërm" ,
-            lartësia : TOTAL_H ,
-            kufiri i djathtë : "1px i ngurtë #E2E8F0" ,
-            sfond : E BARDHË ,
- } }
+      {/* Day columns — absolutely positioned blocks */}
+      {DAYS.map((day) => (
+        <div
+          key={day}
+          style={{
+            position: "relative",
+            height: TOTAL_H,
+            borderRight: "1px solid #E2E8F0",
+            background: WHITE,
+          }}
         >
-          { /* Vijat udhëzuese horizontale të orës */ }
-          { TIME_SLOTS . hartë ( ( vend , idx ) => (
-            < div
-              çelësi = { vend i caktuar }
-              stili = { {
-                pozicioni : "absolute" ,
-                maja : idx * SLOT_H ,
-                majtas : 0 ,
-                djathtas : 0 ,
-                kufiri Fundi : idx === TIME_SLOTS . gjatësia - 1 ? "asnjë" : "1px solid #F1F5F9" ,
-                lartësia : SLOT_H ,
-                Ngjarjet e treguesit : "asnjë" ,
- } }
+          {/* Horizontal hour guide lines */}
+          {TIME_SLOTS.map((slot, idx) => (
+            <div
+              key={slot}
+              style={{
+                position: "absolute",
+                top: idx * SLOT_H,
+                left: 0,
+                right: 0,
+                borderBottom: idx === TIME_SLOTS.length - 1 ? "none" : "1px solid #F1F5F9",
+                height: SLOT_H,
+                pointerEvents: "none",
+              }}
             />
- )) }
+          ))}
 
-          { /* Blloqe seksionesh */ }
-          { byDay [ ditë ]. hartë (( s ) => {
-            konst startMin = toMinutes ( s . ore_fillimi );
-            konst endMin = toMinutes ( s . ore_mbarimi );
-            konst maja = (( min fillimi - GRID_START ) / 60 ) * SLOT_H + 2 ;
-            konst lartësia = Math.max ( (( endMin - startMin ) / 60 ) * SLOT_H - 4 , 28 ) ;
-            kthim (
-              < div
-                çelësi = { s . sek_id }
-                stili = { {
-                  pozicioni : "absolute" ,
-                  majë ,
-                  majtas : 3 ,
-                  djathtas : 3 ,
-                  lartësia ,
- } }
+          {/* Section blocks */}
+          {byDay[day].map((s) => {
+            const startMin = toMinutes(s.ore_fillimi);
+            const endMin   = toMinutes(s.ore_mbarimi);
+            const top      = ((startMin - GRID_START) / 60) * SLOT_H + 2;
+            const height   = Math.max(((endMin - startMin) / 60) * SLOT_H - 4, 28);
+            return (
+              <div
+                key={s.sek_id}
+                style={{
+                  position: "absolute",
+                  top,
+                  left: 3,
+                  right: 3,
+                  height,
+                }}
               >
-                < Blloku i Seksionit s = { s } lartësiaPx = { lartësia } />
-              </div>​​
- );
- }) }
-        </div>​​
- )) }
- </div>​​
- </ Kartë >
- );
+                <SectionBlock s={s} heightPx={height} />
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  </Card>
+);
 
- eksporto OrariTimetable të parazgjedhur ;
+export default OrariTimetable;
