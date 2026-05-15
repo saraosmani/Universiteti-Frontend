@@ -430,5 +430,104 @@ const ProvimePage = () => {
  "Pas ditësh",
  ],
  ].map(([v, l]) => (
- <div key={String(l)}
+ <div key={String(l)} style={{ textAlign: "center" }}>
+ <p
+ style={{
+ fontSize: 22,
+ fontWeight: 700,
+ margin: 0,
+ color: WHITE,
+ }}
+ >
+ {v}
+ </p>
+ <p
+ style={{
+ fontSize: 11,
+ opacity: 0.7,
+ margin: "2px 0 0",
+ color: WHITE,
+ }}
+ >
+ {l}
+ </p>
+ </div>
+ ))}
+ </div>
+ </div>
 
+ {/* ── Filter bar ── */}
+ <div
+ style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}
+ >
+ <FilterBtn
+ value="upcoming"
+ label="Të ardhshme"
+ count={upcoming.length}
+ />
+ <FilterBtn value="all" label="Të gjitha" count={provime.length} />
+ <FilterBtn
+ value="past"
+ label="Të kaluara"
+ count={provime.filter((p) => daysUntil(p.data) < 0).length}
+ />
+ {types.map((t) => (
+ <FilterBtn
+ key={t}
+ value={t}
+ label={t}
+ count={provime.filter((p) => p.lloji === t).length}
+ />
+ ))}
+ </div>
+
+ {/* ── Content ── */}
+ {isLoading ? (
+ <div style={{ display: "flex", justifyContent: "center", padding: 60 }}>
+ <Spin size="large" />
+ </div>
+ ) : filtered.length === 0 ? (
+ <div
+ style={{
+ background: WHITE,
+ border: `1px solid ${BORDER}`,
+ borderRadius: 14,
+ padding: "60px 40px",
+ textAlign: "center",
+ }}
+ >
+ <p style={{ fontSize: 32, margin: "0 0 12px" }}>📋</p>
+ <p
+ style={{
+ fontSize: 15,
+ fontWeight: 600,
+ color: NAVY,
+ margin: "0 0 6px",
+ }}
+ >
+ Nuk ka provime
+ </p>
+ <p style={{ fontSize: 13, color: MUTED, margin: 0 }}>
+ {filter === "upcoming"
+ ? "Nuk ka provime të ardhshme."
+ : "Nuk u gjet asnjë provim."}
+ </p>
+ </div>
+ ) : (
+ <div
+ style={{
+ display: "grid",
+ gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+ gap: 16,
+ }}
+ >
+ {filtered.map((p, i) => (
+ <ProvimCard key={p.prov_id} provim={p} index={i} />
+ ))}
+ </div>
+ )}
+ </Layout>
+ );
+};
+
+export default ProvimePage;
