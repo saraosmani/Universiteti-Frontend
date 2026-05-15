@@ -15,6 +15,20 @@ const DAYS = [
   "E Shtunë",
 ];
 
+const DAYS_DB = [
+  "Diel",
+  "Hene",
+  "Marte",
+  "Merkure",
+  "Enjte",
+  "Premte",
+  "Shtune",
+];
+
+function isSameDay(dita: string, dayIndex: number): boolean {
+  return dita === DAYS[dayIndex] || dita === DAYS_DB[dayIndex];
+}
+
 export interface Seksion {
   sek_id: string | number;
   lenda: { emer: string; kod: string };
@@ -31,7 +45,7 @@ export const UpcomingClasses: React.FC<{
   seksionet: Seksion[];
   loading: boolean;
 }> = ({ seksionet, loading }) => {
-  const todayLabel = DAYS[new Date().getDay()];
+  const todayIdx = new Date().getDay();
 
   const todayClasses = useMemo(() => {
     const now = new Date();
@@ -39,10 +53,10 @@ export const UpcomingClasses: React.FC<{
     return seksionet
       .filter(
         (s) =>
-          s.dita === todayLabel && s.ore_fillimi.slice(0, 5) > currentTime,
+          isSameDay(s.dita, todayIdx) && s.ore_mbarimi.slice(0, 5) > currentTime,
       )
       .sort((a, b) => a.ore_fillimi.localeCompare(b.ore_fillimi));
-  }, [seksionet, todayLabel]);
+  }, [seksionet, todayIdx]);
 
   return (
     <Card>
